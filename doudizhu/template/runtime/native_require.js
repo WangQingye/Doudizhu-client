@@ -11,13 +11,13 @@ var game_file_list = [
 	"libs/modules/tween/tween.js",
 	"libs/modules/socket/socket.js",
 	"bin-debug/AssetAdapter.js",
-	"bin-debug/client/Card.js",
-	"bin-debug/client/Douzizhu.js",
 	"bin-debug/LoadingUI.js",
 	"bin-debug/Main.js",
+	"bin-debug/ThemeAdapter.js",
+	"bin-debug/client/Card.js",
+	"bin-debug/client/Douzizhu.js",
 	"bin-debug/net/NetController.js",
 	"bin-debug/net/WS.js",
-	"bin-debug/ThemeAdapter.js",
 	//----auto game_file_list end----
 ];
 
