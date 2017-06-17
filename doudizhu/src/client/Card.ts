@@ -9,9 +9,10 @@ class Card extends eui.Image
 {
     private isSelect:boolean;
     /**真实点数，注意这是斗地主，最小的是3*/
-    private point:number;
+    public point:number;
     /**扑克序号,1-54*/
     private _index : number;
+
     public get index() : number {
         return this._index;
     }

@@ -112,7 +112,8 @@ class Doudizhu extends eui.Component
     private my_poker:eui.Group;
     private right_poker:eui.Group;
     private left_poker:eui.Group;
-
+    /**准备出的牌，根据这个数组里的牌来判断是否可以出牌*/
+    private onTouchPoker: Array<number>; 
     private refreshMyCard(arr:[number]):void
     {
         for(let i = 0; i < arr.length; i++)

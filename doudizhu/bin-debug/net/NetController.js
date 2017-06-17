@@ -15,7 +15,7 @@ var NetController = (function () {
     p.connect = function () {
         if (!this.ws) {
             this.ws = new WS();
-            this.ws.connect("192.168.8.68", 8181);
+            this.ws.connect("192.168.0.103", 8181);
         }
     };
     /**读取数据*/
