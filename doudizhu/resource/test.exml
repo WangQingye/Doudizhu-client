@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<e:Skin class="test" width="1136" height="640" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*">
+	<e:Image left="0" right="0" top="0" bottom="0" source="bg_png"/>
+	<e:Button id="start" label="" horizontalCenter="0" verticalCenter="0">
+		<e:skinName>
+			<e:Skin states="up,down,disabled">
+			<e:Image width="100%" height="100%" source="start_png"/>
+			<e:Label id="labelDisplay" horizontalCenter="0" verticalCenter="0"/>
+			</e:Skin>
+		</e:skinName>
+	</e:Button>
+	<e:Image id="start_tip" source="start_tip_png" horizontalCenter="0" verticalCenter="0" visible="false"/>
+	<e:Label id="my_id" text="robat" y="571.67" textColor="0x000000" bold="true" horizontalCenter="-17.5" textAlign="center" visible="false"/>
+	<e:Label id="left_id" text="robat" textColor="0x000000" bold="true" textAlign="center" x="20" y="209" visible="false"/>
+	<e:Label id="right_id" text="robat" y="209" textColor="0x000000" bold="true" horizontalCenter="504.5" textAlign="center" visible="false"/>
+	<e:Group id="left_poker" width="104" x="40.5" anchorOffsetX="0" anchorOffsetY="0" verticalCenter="-80">
+		<e:Image x="0" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="0" y="20" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="0" y="38" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="10" y="10" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="10" y="30" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="10" y="48" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="20" y="20" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="20" y="40" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="20" y="58" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="30" y="30" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="30" y="50" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="30" y="68" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="40" y="40" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="40" y="60" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="40" y="78" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="50" y="88" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="60" y="98" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="70" y="108" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="80" y="118" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="90" y="128" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:layout>
+			<e:VerticalLayout paddingTop="0" gap="-137"/>
+		</e:layout>
+	</e:Group>
+	<e:Group id="right_poker" width="104" height="396" x="975.5" anchorOffsetX="0" anchorOffsetY="0" verticalCenter="-80">
+		<e:Image x="0" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="0" y="20" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="0" y="38" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="10" y="10" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="10" y="30" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="10" y="48" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="20" y="20" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="20" y="40" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="20" y="58" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="30" y="30" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="30" y="50" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="30" y="68" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="40" y="40" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="40" y="60" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="40" y="78" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="50" y="88" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="60" y="98" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="70" y="108" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="80" y="118" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:Image x="90" y="128" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:layout>
+		<e:VerticalLayout paddingTop="0" gap="-137"/>
+		</e:layout>
+	</e:Group>
+	<e:Group id="my_poker" height="149" y="450" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="-28">
+		<ns1:Card x="0" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="35" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="70" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="105" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="140" y="0" scaleX="1" scaleY="1" source="1_jpg"/>
+		<ns1:Card x="175" scaleX="1" scaleY="1" y="0" source="5_jpg"/>
+		<ns1:Card x="210" y="0" scaleX="1" scaleY="1" source="33_jpg"/>
+		<ns1:Card x="245" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="280" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="315" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="350" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="385" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="420" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="455" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="490" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="525" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="560" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="595" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="630" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="665" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<e:layout>
+			<e:BasicLayout/>
+		</e:layout>
+	</e:Group>
+</e:Skin>
