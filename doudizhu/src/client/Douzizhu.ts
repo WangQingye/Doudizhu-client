@@ -78,7 +78,7 @@ class Doudizhu extends eui.Component
                 if(this.playerName == players[i])
                 {
                     this.my_id.text = (i+1) + '号位：' + players[i];
-                    this.mySeat = i;
+                    this.mySeat = i + 1;
                     if(i == 2)
                     {
                         this.right_id.text = '1号位：' + players[0];
@@ -145,11 +145,13 @@ class Doudizhu extends eui.Component
     private rect_1:eui.Rect;
     private rect_2:eui.Rect;
     private rect_3:eui.Rect;
+    private btn_yes:eui.Button;
+    private btn_no:eui.Button;
     /**游戏进程消息*/
     private onRecivePlayGame(content):void
     {
-        let index = content.index;
-        this.showRect(index);
+        let seat = content.curPlayerIndex;
+        this.showRect(seat);
         console.log('onRecivePlayGame', content);
     }
 
@@ -159,17 +161,24 @@ class Doudizhu extends eui.Component
         {
             this.rect_1.visible = true;
             this.rect_2.visible = false;
-            this.rect_3.visible = false;
+            this.rect_3.visible = false;            
+            this.btn_no.visible = false;
+            this.btn_yes.visible = false;
+            
         }else if(index == this.mySeat)
         {
             this.rect_1.visible = false;
             this.rect_2.visible = true;
             this.rect_3.visible = false;
+            this.btn_no.visible = true;
+            this.btn_yes.visible = true;
         }else if(index == this.rightSeat)
         {
             this.rect_1.visible = false;
             this.rect_2.visible = false;
             this.rect_3.visible = true;
+            this.btn_no.visible = false;
+            this.btn_yes.visible = false;
         }
     }
 

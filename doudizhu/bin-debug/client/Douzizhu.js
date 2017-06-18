@@ -62,7 +62,7 @@ var Doudizhu = (function (_super) {
             for (var i = 0; i < players.length; i++) {
                 if (this.playerName == players[i]) {
                     this.my_id.text = (i + 1) + '号位：' + players[i];
-                    this.mySeat = i;
+                    this.mySeat = i + 1;
                     if (i == 2) {
                         this.right_id.text = '1号位：' + players[0];
                         this.left_id.text = '2号位：' + players[1];
@@ -116,7 +116,32 @@ var Doudizhu = (function (_super) {
     };
     /**游戏进程消息*/
     Doudizhu.prototype.onRecivePlayGame = function (content) {
+        var seat = content.curPlayerIndex;
+        this.showRect(seat);
         console.log('onRecivePlayGame', content);
+    };
+    Doudizhu.prototype.showRect = function (index) {
+        if (index == this.leftSeat) {
+            this.rect_1.visible = true;
+            this.rect_2.visible = false;
+            this.rect_3.visible = false;
+            this.btn_no.visible = false;
+            this.btn_yes.visible = false;
+        }
+        else if (index == this.mySeat) {
+            this.rect_1.visible = false;
+            this.rect_2.visible = true;
+            this.rect_3.visible = false;
+            this.btn_no.visible = true;
+            this.btn_yes.visible = true;
+        }
+        else if (index == this.rightSeat) {
+            this.rect_1.visible = false;
+            this.rect_2.visible = false;
+            this.rect_3.visible = true;
+            this.btn_no.visible = false;
+            this.btn_yes.visible = false;
+        }
     };
     Doudizhu.prototype.refreshMyCard = function (arr) {
         for (var i = 0; i < arr.length; i++) {
