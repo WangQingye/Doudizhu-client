@@ -141,11 +141,38 @@ class Doudizhu extends eui.Component
         }
     }
 
+
+    private rect_1:eui.Rect;
+    private rect_2:eui.Rect;
+    private rect_3:eui.Rect;
     /**游戏进程消息*/
     private onRecivePlayGame(content):void
     {
+        let index = content.index;
+        this.showRect(index);
         console.log('onRecivePlayGame', content);
     }
+
+    private showRect(index:number):void
+    {
+        if(index == this.leftSeat)
+        {
+            this.rect_1.visible = true;
+            this.rect_2.visible = false;
+            this.rect_3.visible = false;
+        }else if(index == this.mySeat)
+        {
+            this.rect_1.visible = false;
+            this.rect_2.visible = true;
+            this.rect_3.visible = false;
+        }else if(index == this.rightSeat)
+        {
+            this.rect_1.visible = false;
+            this.rect_2.visible = false;
+            this.rect_3.visible = true;
+        }
+    }
+
 
     /**扑克显示*/
     private my_poker:eui.Group;
