@@ -1,10 +1,12 @@
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
 var WS = (function () {
     function WS() {
         /*是否用二进制发送数据*/
         this.isBin = false;
     }
-    var d = __define,c=WS,p=c.prototype;
-    p.connect = function (url, port) {
+    WS.prototype.connect = function (url, port) {
         this.WebSocket = new egret.WebSocket();
         this.WebSocket.type = this.isBin ? egret.WebSocket.TYPE_BINARY : egret.WebSocket.TYPE_STRING;
         this.WebSocket.addEventListener(egret.ProgressEvent.SOCKET_DATA, this.onReceiveMessage, this);
@@ -13,7 +15,7 @@ var WS = (function () {
         this.WebSocket.addEventListener(egret.IOErrorEvent.IO_ERROR, this.onSocketError, this);
         this.WebSocket.connect(url, port);
     };
-    p.onReceiveMessage = function (e) {
+    WS.prototype.onReceiveMessage = function (e) {
         console.log('socket  收到了消息');
         if (this.isBin) {
             var byte = new egret.ByteArray();
@@ -27,7 +29,7 @@ var WS = (function () {
         }
         NetController.getInstance().readData(JSON.parse(msg));
     };
-    p.sendData = function (data) {
+    WS.prototype.sendData = function (data) {
         console.log('发出消息' + data);
         if (this.isBin) {
             var byte = new egret.ByteArray();
@@ -39,16 +41,16 @@ var WS = (function () {
             this.WebSocket.writeUTF(data);
         }
     };
-    p.onSocketOpen = function () {
+    WS.prototype.onSocketOpen = function () {
         NetController.getInstance().showState("socket 连接上了");
     };
-    p.onSocketClose = function () {
+    WS.prototype.onSocketClose = function () {
         NetController.getInstance().showState("socket 关闭了");
     };
-    p.onSocketError = function () {
+    WS.prototype.onSocketError = function () {
         NetController.getInstance().showState("socket error");
     };
     return WS;
 }());
-egret.registerClass(WS,'WS');
+__reflect(WS.prototype, "WS");
 //# sourceMappingURL=WS.js.map

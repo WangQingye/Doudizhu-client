@@ -1,13 +1,22 @@
 // TypeScript file
+var __reflect = (this && this.__reflect) || function (p, c, t) {
+    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
+};
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var Doudizhu = (function (_super) {
     __extends(Doudizhu, _super);
     function Doudizhu() {
-        _super.call(this);
-        console.log(1);
-        this.skinName = "resource/test.exml";
-        this.init();
+        var _this = _super.call(this) || this;
+        _this.onMyTurn = false; //是否该我出牌
+        _this.cardArr = []; //准备出的牌组（点起来的）
+        _this.skinName = "resource/test.exml";
+        _this.init();
+        return _this;
     }
-    var d = __define,c=Doudizhu,p=c.prototype;
     // public createChildren():void
     // {
     //     //this.init();
@@ -18,32 +27,33 @@ var Doudizhu = (function (_super) {
         }
         return this._instance;
     };
-    p.init = function () {
+    Doudizhu.prototype.init = function () {
         this.start.addEventListener(egret.TouchEvent.TOUCH_TAP, this.matchPlayer, this);
+        this.my_poker.addEventListener(egret.TouchEvent.TOUCH_TAP, this.cardOnTouch, this);
+        NetController.getInstance().addListener(Commands.ROOM_NOTIFY, this);
+        NetController.getInstance().addListener(Commands.PLAY_GAME, this);
         NetController.getInstance().connect();
     };
     /**开始匹配游戏*/
-    p.matchPlayer = function () {
+    Doudizhu.prototype.matchPlayer = function () {
         this.start.enabled = false;
         this.tipTween();
         var data = new BaseMsg();
         data.command = Commands.MATCH_PLAYER;
         this.playerName = Math.floor(Math.random() * 100) + "";
-        console.log(this.playerName);
         data.content = { "name": this.playerName };
         NetController.getInstance().sendData(data, this.onMatchPlayerBack, this);
     };
-    p.tipTween = function () {
+    Doudizhu.prototype.tipTween = function () {
         this.start.visible = false;
         this.start_tip.visible = true;
         this.start_tip.rotation = 5;
         egret.Tween.get(this.start_tip, { loop: true })
             .to({ rotation: -5 }, 500, egret.Ease.backInOut)
             .to({ rotation: 5 }, 500, egret.Ease.backInOut);
-        console.log("tipTween");
     };
     /**匹配完毕,分配座位,开始发牌*/
-    p.onMatchPlayerBack = function (data) {
+    Doudizhu.prototype.onMatchPlayerBack = function (data) {
         console.log('匹配返回', data);
         if (data.code == 0) {
             console.log('匹配成功' + '玩家有：' + data.content.players);
@@ -52,6 +62,7 @@ var Doudizhu = (function (_super) {
             for (var i = 0; i < players.length; i++) {
                 if (this.playerName == players[i]) {
                     this.my_id.text = (i + 1) + '号位：' + players[i];
+                    this.mySeat = i;
                     if (i == 2) {
                         this.right_id.text = '1号位：' + players[0];
                         this.left_id.text = '2号位：' + players[1];
@@ -76,16 +87,60 @@ var Doudizhu = (function (_super) {
             this.left_id.visible = true;
             this.right_id.visible = true;
         }
-        this.refreshMyCard([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]);
     };
-    p.refreshMyCard = function (arr) {
+    /**收到服务器消息*/
+    Doudizhu.prototype.onReciveMsg = function (data) {
+        console.warn('onReciveMsg');
+        var command = data.command;
+        switch (command) {
+            case Commands.ROOM_NOTIFY:
+                this.onReciveRoomNotify(data.content);
+                break;
+            case Commands.PLAY_GAME:
+                this.onRecivePlayGame(data.content);
+        }
+    };
+    /**房间消息*/
+    Doudizhu.prototype.onReciveRoomNotify = function (content) {
+        //2是结算，1是游戏中, 0是第一次发牌
+        var state = content.state;
+        if (state == undefined)
+            return;
+        switch (state) {
+            case 0:
+                var cards = content.cards;
+                console.log('cards', cards);
+                this.refreshMyCard(cards.sort(function (a, b) { return b - a; }));
+                break;
+        }
+    };
+    /**游戏进程消息*/
+    Doudizhu.prototype.onRecivePlayGame = function (content) {
+        console.log('onRecivePlayGame', content);
+    };
+    Doudizhu.prototype.refreshMyCard = function (arr) {
         for (var i = 0; i < arr.length; i++) {
             var card = this.my_poker.getChildAt(i);
             card.index = arr[i];
         }
     };
+    Doudizhu.prototype.cardOnTouch = function (e) {
+        //if(!this.onMyTurn) return; //不该我出牌的时候点不动
+        var card = e.target;
+        if (card.onTouch) {
+            card.onTouch = false;
+            if (this.cardArr.indexOf(card) !== -1) {
+                this.cardArr.splice(this.cardArr.indexOf(card), 1);
+            }
+        }
+        else {
+            card.onTouch = true;
+            this.cardArr.push(card);
+        }
+    };
+    ;
     /**移除他人的扑克牌，只需要知道几张，和几号位*/
-    p.removeOtherCard = function (num, seat) {
+    Doudizhu.prototype.removeOtherCard = function (num, seat) {
         while (num) {
             if (seat == this.rightSeat) {
                 this.right_poker.removeChildAt(this.right_poker.numChildren - 1);
@@ -97,12 +152,12 @@ var Doudizhu = (function (_super) {
         }
     };
     /**自己的牌需要根据序号来移除*/
-    p.removeMyCard = function (point) {
+    Doudizhu.prototype.removeMyCard = function (point) {
         for (var i = 0; i < this.my_poker.numChildren; i++) {
             this.my_poker.getChildAt(i);
         }
     };
     return Doudizhu;
 }(eui.Component));
-egret.registerClass(Doudizhu,'Doudizhu');
+__reflect(Doudizhu.prototype, "Doudizhu");
 //# sourceMappingURL=Douzizhu.js.map

@@ -10,9 +10,9 @@
 		</e:skinName>
 	</e:Button>
 	<e:Image id="start_tip" source="start_tip_png" horizontalCenter="0" verticalCenter="0" visible="false"/>
-	<e:Label id="my_id" text="robat" y="571.67" textColor="0x000000" bold="true" horizontalCenter="-17.5" textAlign="center" visible="false"/>
-	<e:Label id="left_id" text="robat" textColor="0x000000" bold="true" textAlign="center" x="20" y="209" visible="false"/>
-	<e:Label id="right_id" text="robat" y="209" textColor="0x000000" bold="true" horizontalCenter="504.5" textAlign="center" visible="false"/>
+	<e:Label id="my_id" text="robat" y="603.67" textColor="0x000000" bold="true" horizontalCenter="-17.5" textAlign="center"/>
+	<e:Label id="left_id" text="robat" textColor="0x000000" bold="true" textAlign="center" x="10" y="459"/>
+	<e:Label id="right_id" text="robat" y="462" textColor="0x000000" bold="true" textAlign="center" x="972"/>
 	<e:Group id="left_poker" width="104" x="40.5" anchorOffsetX="0" anchorOffsetY="0" verticalCenter="-80">
 		<e:Image x="0" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<e:Image x="0" y="20" source="bg_poker_png" scaleX="1" scaleY="1"/>
@@ -68,9 +68,9 @@
 		<ns1:Card x="35" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<ns1:Card x="70" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<ns1:Card x="105" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
-		<ns1:Card x="140" y="0" scaleX="1" scaleY="1" source="1_jpg"/>
-		<ns1:Card x="175" scaleX="1" scaleY="1" y="0" source="5_jpg"/>
-		<ns1:Card x="210" y="0" scaleX="1" scaleY="1" source="33_jpg"/>
+		<ns1:Card x="140" y="0" scaleX="1" scaleY="1" source="bg_poker_png"/>
+		<ns1:Card x="175" scaleX="1" scaleY="1" y="0" source="bg_poker_png"/>
+		<ns1:Card x="210" y="0" scaleX="1" scaleY="1" source="bg_poker_png"/>
 		<ns1:Card x="245" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<ns1:Card x="280" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<ns1:Card x="315" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
@@ -81,11 +81,15 @@
 		<ns1:Card x="490" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<ns1:Card x="525" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<ns1:Card x="560" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
-		<ns1:Card x="595" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
-		<ns1:Card x="630" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
-		<ns1:Card x="665" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<e:layout>
 			<e:BasicLayout/>
 		</e:layout>
 	</e:Group>
+	<e:Rect id="rect_1" width="103" height="20" x="175" fillColor="0xff0000" verticalCenter="-73" visible="false"/>
+	<e:Rect id="rect_3" width="103" height="20" x="846" fillColor="0xFF0000" verticalCenter="-73" visible="false"/>
+	<e:Rect id="rect_2" width="103" height="20" y="334" fillColor="0xFF0000" rotation="90" horizontalCenter="0" visible="false"/>
+	<e:Button id="btn_yes" label="出牌" x="409.5" y="387" visible="false">
+	</e:Button>
+	<e:Button id="btn_no" label="过" x="647.5" y="387" width="81" visible="false">
+	</e:Button>
 </e:Skin>

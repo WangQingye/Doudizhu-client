@@ -5,19 +5,18 @@ var game_file_list = [
 	"libs/modules/egret/egret.js",
 	"libs/modules/egret/egret.native.js",
 	"libs/modules/game/game.js",
-	"libs/modules/game/game.native.js",
 	"libs/modules/res/res.js",
 	"libs/modules/eui/eui.js",
 	"libs/modules/tween/tween.js",
 	"libs/modules/socket/socket.js",
 	"bin-debug/AssetAdapter.js",
-	"bin-debug/LoadingUI.js",
-	"bin-debug/Main.js",
-	"bin-debug/ThemeAdapter.js",
 	"bin-debug/client/Card.js",
 	"bin-debug/client/Douzizhu.js",
+	"bin-debug/LoadingUI.js",
+	"bin-debug/Main.js",
 	"bin-debug/net/NetController.js",
 	"bin-debug/net/WS.js",
+	"bin-debug/ThemeAdapter.js",
 	//----auto game_file_list end----
 ];
 

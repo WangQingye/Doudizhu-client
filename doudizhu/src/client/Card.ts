@@ -26,5 +26,22 @@ class Card extends eui.Image
         {
             this.point = Math.floor(v/4) + 1;
         }
-    }    
+    }
+
+    //是否被点击
+    private _onTouch : boolean;
+    public get onTouch() : boolean {
+        return this._onTouch;
+    }
+    public set onTouch(v : boolean) {
+        this._onTouch = v;
+        if(v)
+        {
+            this.y -= 20;
+        }else
+        {
+            this.y += 20;
+        }
+    }
+    
 }

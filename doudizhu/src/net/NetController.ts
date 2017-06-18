@@ -23,7 +23,7 @@ class NetController
         if(!this.ws)
         {
             this.ws = new WS();
-            this.ws.connect("192.168.0.103", 8181);
+            this.ws.connect("192.168.0.101", 8181);
         }
     }
 
@@ -46,6 +46,12 @@ class NetController
             console.log('来自服务器的主动消息 ：' + msg);
             this.dispatcher.dispatchEventWith(msg.command+'', false, msg);
         }
+    }
+
+    /**接收到数据时都事件监听*/
+    public addListener(command, obj)
+    {
+        this.dispatcher.addEventListener(command+'', (e:egret.Event)=>{obj.onReciveMsg(e.data)}, this);
     }
 
     /**发送数据*/
@@ -84,4 +90,5 @@ class Commands {
     public static LOGIN = 3;
     public static MATCH_PLAYER = 4;
     public static PLAY_GAME = 5;
+    public static ROOM_NOTIFY = 6;
 }

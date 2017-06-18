@@ -10,8 +10,7 @@ class Doudizhu extends eui.Component
     public constructor()
     {
         super();
-        console.log(1);
-        this.skinName = "resource/test.exml"
+        this.skinName = "resource/test.exml";
         this.init();
     }
     
@@ -30,6 +29,9 @@ class Doudizhu extends eui.Component
     public init()
     {
         this.start.addEventListener(egret.TouchEvent.TOUCH_TAP, this.matchPlayer, this);
+        this.my_poker.addEventListener(egret.TouchEvent.TOUCH_TAP, this.cardOnTouch, this);
+        NetController.getInstance().addListener(Commands.ROOM_NOTIFY, this);
+        NetController.getInstance().addListener(Commands.PLAY_GAME, this);
         NetController.getInstance().connect();
     }
 
@@ -42,7 +44,6 @@ class Doudizhu extends eui.Component
         var data = new BaseMsg();
         data.command = Commands.MATCH_PLAYER;
         this.playerName = Math.floor(Math.random() * 100) + "";
-        console.log(this.playerName);
         data.content = { "name": this.playerName };
         NetController.getInstance().sendData(data, this.onMatchPlayerBack, this);
     }
@@ -55,13 +56,13 @@ class Doudizhu extends eui.Component
 		egret.Tween.get(this.start_tip, {loop:true})
 			.to({rotation:-5}, 500, egret.Ease.backInOut)
 			.to({rotation:5}, 500, egret.Ease.backInOut)
-        console.log("tipTween");
     }
 
     private my_id:eui.Label;
     private left_id:eui.Label;
-    private leftSeat:number;
     private right_id:eui.Label;
+    private mySeat:number;
+    private leftSeat:number;
     private rightSeat:number;
 
     /**匹配完毕,分配座位,开始发牌*/
@@ -77,6 +78,7 @@ class Doudizhu extends eui.Component
                 if(this.playerName == players[i])
                 {
                     this.my_id.text = (i+1) + '号位：' + players[i];
+                    this.mySeat = i;
                     if(i == 2)
                     {
                         this.right_id.text = '1号位：' + players[0];
@@ -105,7 +107,44 @@ class Doudizhu extends eui.Component
             // this.p3_id.text = 
             // this.p3_id.text = 
         }
-        this.refreshMyCard([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17]);
+    }
+
+    /**收到服务器消息*/
+    private onReciveMsg(data:BaseMsg)
+    {
+        console.warn('onReciveMsg');
+        let command = data.command;
+        switch (command)
+        {
+            case Commands.ROOM_NOTIFY:
+                this.onReciveRoomNotify(data.content);
+                break;
+            case Commands.PLAY_GAME:
+                this.onRecivePlayGame(data.content);
+            /*留下其他*/
+        }
+    }
+
+    /**房间消息*/
+    private onReciveRoomNotify(content):void
+    {
+        //2是结算，1是游戏中, 0是第一次发牌
+        let state = content.state;
+        if(state == undefined) return;
+        switch(state)
+        {
+            case 0 :
+                let cards = content.cards;
+                console.log('cards',cards);
+                this.refreshMyCard(cards.sort(function(a,b){return b-a}));
+                break;
+        }
+    }
+
+    /**游戏进程消息*/
+    private onRecivePlayGame(content):void
+    {
+        console.log('onRecivePlayGame', content);
     }
 
     /**扑克显示*/
@@ -120,8 +159,28 @@ class Doudizhu extends eui.Component
         {
             let card = <Card>this.my_poker.getChildAt(i);
             card.index = arr[i];
-        }        
+        }
     }
+
+    private onMyTurn:boolean = false; //是否该我出牌
+    private cardArr:Array<Card> = [];//准备出的牌组（点起来的）
+    private cardOnTouch(e:egret.TouchEvent):void
+    {
+        //if(!this.onMyTurn) return; //不该我出牌的时候点不动
+        let card = <Card>e.target;
+        if(card.onTouch)
+        {
+            card.onTouch = false;
+            if(this.cardArr.indexOf(card) !== -1)
+            {
+                this.cardArr.splice(this.cardArr.indexOf(card), 1);
+            }
+        }else
+        {
+            card.onTouch = true;
+            this.cardArr.push(card);
+        }
+    };
 
     /**移除他人的扑克牌，只需要知道几张，和几号位*/
     private removeOtherCard(num:number, seat:number):void
