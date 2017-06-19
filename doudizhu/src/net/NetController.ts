@@ -74,13 +74,11 @@ class NetController
 }
 
 /**基本的消息格式*/
-class BaseMsg {
-	
+class BaseMsg {	
 	public command: number;
 	public code: number;
 	public seq: number;
 	public content: any;
-
 }
 
 /**基本操作代码*/
@@ -91,4 +89,6 @@ class Commands {
     public static MATCH_PLAYER = 4;
     public static PLAY_GAME = 5;
     public static ROOM_NOTIFY = 6;
+    public static PLAYER_PLAYCARD = 7;
+    public static PLAYER_WANTDIZHU = 8;
 }
