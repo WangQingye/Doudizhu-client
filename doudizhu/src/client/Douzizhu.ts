@@ -268,7 +268,10 @@ class Doudizhu extends eui.Component
     /**获得出牌的返回消息*/
     private onPlayCardBack(data:BaseMsg):void
     {
-
+        if(data.code == 0)
+        {
+            console.log('出牌成功');
+        }
     }
 
     /**点击过*/
