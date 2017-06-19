@@ -117,7 +117,7 @@ class Doudizhu extends eui.Component
         switch (command)
         {
             case Commands.ROOM_NOTIFY:
-                this.onReciveRoomNotify(data.content);
+                //this.onReciveRoomNotify(data.content);
                 break;
             case Commands.PLAY_GAME:
                 this.onRecivePlayGame(data.content);
@@ -126,7 +126,7 @@ class Doudizhu extends eui.Component
     }
 
     /**房间消息*/
-    private onReciveRoomNotify(content):void
+    private onRecivePlayGame(content):void
     {
         //2是结算，1是游戏中, 0是第一次发牌
         let state = content.state;
@@ -138,6 +138,8 @@ class Doudizhu extends eui.Component
                 console.log('cards',cards);
                 this.refreshMyCard(cards.sort(function(a,b){return b-a}));
                 break;
+            case 1 :
+                this.onGamePlay(content);
         }
     }
 
@@ -148,10 +150,14 @@ class Doudizhu extends eui.Component
     private btn_yes:eui.Button;
     private btn_no:eui.Button;
     /**游戏进程消息*/
-    private onRecivePlayGame(content):void
+    private onGamePlay(content):void
     {
         let seat = content.curPlayerIndex;
         this.showRect(seat);
+        if(seat == this.mySeat)
+        {
+            this.onMyTurn = true;
+        }
         console.log('onRecivePlayGame', content);
     }
 
@@ -163,8 +169,7 @@ class Doudizhu extends eui.Component
             this.rect_2.visible = false;
             this.rect_3.visible = false;            
             this.btn_no.visible = false;
-            this.btn_yes.visible = false;
-            
+            this.btn_yes.visible = false;            
         }else if(index == this.mySeat)
         {
             this.rect_1.visible = false;
@@ -202,7 +207,7 @@ class Doudizhu extends eui.Component
     private cardArr:Array<Card> = [];//准备出的牌组（点起来的）
     private cardOnTouch(e:egret.TouchEvent):void
     {
-        //if(!this.onMyTurn) return; //不该我出牌的时候点不动
+        if(!this.onMyTurn) return; //不该我出牌的时候点不动
         let card = <Card>e.target;
         if(card.onTouch)
         {
