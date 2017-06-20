@@ -270,7 +270,7 @@ class Doudizhu extends eui.Component
     {
         if(data.code == 0)
         {
-            console.log('出牌成功');
+            console.log('出牌成功1');
         }
     }
 
