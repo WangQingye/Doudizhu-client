@@ -88,7 +88,7 @@ class CardUtils
             }else if( this.calcSameNum(points) == 2 && len%2 == 0 && this.calcDiffNum(points) == len/2)//连对
             {
                 return 9;
-            }else if ( this.calcSameNum(points) == 3 && len%4 == 0 && this.calcDiffNum(points) <= len/2) //
+            }else if ( len%4 == 0 && this.calcHowManySameNum(points,3) == len/4 )//三带一飞
             
         }else if(len == 6)
         {
@@ -161,13 +161,16 @@ class CardUtils
     }
 
     /**
-     * 计算一个数组中相同数为n的牌有几种
+     * 计算一个数组中相同数为n的点数有几种
     */
     private calcHowManySameNum(arr:Array<number>, num:number):number
     {
-        let temp = 0;
+        var temp = 0;
+        let calced = [];
         for(let i = 0; i < arr.length; i++)
         {
+            //[3,3,3]
+            if(calced.indexOf(arr[i]) != -1) continue;
             let temp1 = 1;
             for(let j = 0; j < arr.length; j++)
             {
@@ -178,7 +181,8 @@ class CardUtils
                 }
             }
             if(temp1 == num)
-            {
+            {                
+                calced.push(arr[i]);
                 temp++;
             }
         }
