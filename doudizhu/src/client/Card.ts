@@ -1,6 +1,8 @@
 /**
  * 总数54张，资源名 1-54
- * 扑克牌序号排序是从3点到大小王
+ * 扑克牌序号排序是从3点到大小王:对应顺序如下
+ * 3 4 5 6 7 8 9 10 J  Q  K  A  2  KING
+ * 3 4 5 6 7 8 9 10 11 12 13 14 15 16
  * 举例：四张3点1，2，3，4
  * 同点数排序规则 红黑梅方（斗地主可能用不上）
  * 需要提供一个将序号转为点数的方法，用来对比是否是同点数
@@ -21,10 +23,10 @@ class Card extends eui.Image
         this.source = v + "_jpg";
         if(v % 4 == 0)
         {
-            this.point = v/4;
+            this.point = v/4 + 2;
         }else
         {
-            this.point = Math.floor(v/4) + 1;
+            this.point = Math.floor(v/4) + 3;
         }
     }
 
