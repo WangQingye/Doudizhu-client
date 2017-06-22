@@ -73,7 +73,7 @@ class CardUtils
             }
         }else if(len >= 5 && this.isNumContinuous(points)) //这里直接判断所有顺子，免得后面大于5的时候都去判断是否是顺子
         {
-            return 8;
+            return 7;
         }else if(len == 5)
         {
             if( this.calcSameNum(points) == 3 && this.calcDiffNum(points) == 2) //最大相同数为3，有两种点数，说明是三带二
@@ -84,20 +84,25 @@ class CardUtils
         {   
             if(this.calcSameNum(points) == 3 && len%3 == 0 && this.calcDiffNum(points) == len/3)//三张牌飞机不带
             {
-                return 10;
+                return 9;
             }else if( this.calcSameNum(points) == 2 && len%2 == 0 && this.calcDiffNum(points) == len/2)//连对
             {
-                return 9;
+                return 8;
             }else if ( len%4 == 0 && this.calcHowManySameNum(points,3) == len/4 )//三带一飞
-            
-        }else if(len == 6)
-        {
-            if( this.calcSameNum(points) == 4 )
             {
-                return 6;
+                return 10;
+            }else if ( len%5 == 0 && this.calcSameNum(points) == 3 && this.calcHowManySameNum(points,3) == len/5 && this.calcDiffNum(points) == len/5*2) //三带二飞
+            {
+                return 11;
+            }else if( len == 6 && this.calcSameNum(points) == 4 ) //四带二
+            {
+                return 6
             }
-        }else if(len)
-        return 0;
+            
+        }else
+        {
+            return 0; //什么牌型都不是，说明是错误牌型
+        }
     }
 
     /**
@@ -201,12 +206,12 @@ class CARD_TYPE
     public static THREE_CARD = 3;//3不带
     public static THREE_ONE_CARD = 4;//3带1
     public static THREE_TWO_CARD = 5; //3带2
-    public static BOMB_TWO_CARD = 6; //四个带2张
-    public static BOMB_FOUR_CARD = 7; //四个带2对
-    public static CONNECT_CARD = 8; //连牌
-    public static COMPANY_CARD = 9; //连队
-    public static AIRCRAFT_CARD = 10; //飞机不带
-    public static AIRCRAFT_WING = 11; //飞机带单牌或对子
+    public static BOMB_TWO_CARD = 6; //4带2
+    public static BOMB_FOUR_CARD = 7; //连牌
+    public static CONNECT_CARD = 8; //连对
+    public static COMPANY_CARD = 9; //飞机不带
+    public static AIRCRAFT_CARD = 10; //飞机带单牌
+    public static AIRCRAFT_WING = 11; //飞机带对子
     public static BOMB_CARD = 12; //炸弹
     public static KINGBOMB_CARD = 13;//王炸
 }
