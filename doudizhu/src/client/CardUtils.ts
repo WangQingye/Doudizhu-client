@@ -105,6 +105,32 @@ class CardUtils
     }
 
     /**
+     * 判断头子
+    */
+    public caclHeadPoker(type:CARD_TYPE, cards:Array<number>):number
+    {
+        cards.sort();
+        switch(type)
+        {
+            case 1:
+            case 2:
+            case 3:
+            case 7:
+            case 8:
+            case 9:
+            case 12:
+                return cards[0];
+            case 4:
+            case 5:
+            case 6:
+            case 10:
+                return cards[2]; //机智的我，3带1或者3带2中第三张肯定是三同之一
+            
+        }
+        return 0;
+    }
+
+    /**
      * 判断一个数组中最多有几个元素相等
     */
     public calcSameNum(arr:Array<number>):number
