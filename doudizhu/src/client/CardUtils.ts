@@ -71,15 +71,13 @@ class CardUtils
             {
                 return 4
             }
+            return 0;
         }else if(len >= 5 && this.isNumContinuous(points)) //这里直接判断所有顺子，免得后面大于5的时候都去判断是否是顺子
         {
             return 7;
-        }else if(len == 5)
-        {
-            if( this.calcSameNum(points) == 3 && this.calcDiffNum(points) == 2) //最大相同数为3，有两种点数，说明是三带二
-            {
-                return 5;
-            }
+        }else if(len == 5 && this.calcSameNum(points) == 3 && this.calcDiffNum(points) == 2 ) //最大相同数为3，有两种点数，说明是三带二
+        { 
+            return 5;            
         }else if( len >= 6) //大于6的情况比较多，比如连对（n对），飞机（n飞，带或不带，3张飞还是4张飞）
         {   
             if(this.calcSameNum(points) == 3 && len%3 == 0 && this.calcDiffNum(points) == len/3)//三张牌飞机不带
@@ -98,6 +96,7 @@ class CardUtils
             {
                 return 6
             }
+            return 0;
             
         }else
         {
@@ -216,9 +215,6 @@ class CARD_TYPE
     public static KINGBOMB_CARD = 13;//王炸
 }
 
-
-
-
 /**
  * 当前桌面上的牌（上家的牌）
 */
@@ -229,6 +225,6 @@ class CUR_CARDS
     public type:CARD_TYPE;
     /**头子（头子中最小的那张）*/
     public small:number;
-    /**具体是哪些牌,用于展示在桌面上*/
+    /**具体是哪些牌,用于展示在桌面上(index)*/
     public cards:Array<number>;
 }
