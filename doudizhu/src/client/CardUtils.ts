@@ -109,6 +109,7 @@ class CardUtils
     */
     public caclHeadPoker(type:CARD_TYPE, cards:Array<number>):number
     {
+        console.log();
         cards.sort();
         switch(type)
         {
