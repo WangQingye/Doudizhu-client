@@ -12,32 +12,20 @@ class CardUtils
     return this._instance;
 	}
 
-    public canPlay(curCards:CUR_CARDS, choosenCard:Array<number>):boolean
+    public canPlay(curCards:CUR_CARDS, choosenCard:Array<Card>):boolean
     {
-        /**待写*/
-        return true;
-    }
-
-    /**将牌组转换出index*/
-    public transCardsToIndex(choosenCard:Array<Card>):Array<number>
-    {
-        let arr = [];
-        for(let i = 0; i < choosenCard.length; i++)
+        let curHeadPoker =  curCards.small;
+        let curType = curCards.type;
+        let choosenType = this.calcCardType(choosenCard);
+        let choosenHeadPoker = this.calcHeadPoker(choosenType, choosenCard);
+        /**牌型一致，头子更大*/
+        if(curType == choosenType && choosenHeadPoker > curHeadPoker)
         {
-            arr.push(choosenCard[i].index);
-        }
-        return arr;
-    }
-
-    /**讲牌组转换出point*/
-    public transCardsToPoint(choosenCard:Array<Card>):Array<number>
-    {
-        let arr = [];
-        for(let i = 0; i < choosenCard.length; i++)
+            return true;
+        }else
         {
-            arr.push(choosenCard[i].point);
-        }
-        return arr;
+            return false;
+        }       
     }
 
     /**
@@ -107,10 +95,9 @@ class CardUtils
     /**
      * 判断头子
     */
-    public caclHeadPoker(type:CARD_TYPE, cards:Array<number>):number
+    public calcHeadPoker(type:CARD_TYPE, choosenCard:Array<Card>):number
     {
-        console.log();
-        cards.sort();
+        let cards = this.transCardsToPoint(choosenCard);
         switch(type)
         {
             case 1:
@@ -126,7 +113,8 @@ class CardUtils
             case 6:
             case 10:
                 return cards[2]; //机智的我，3带1或者3带2中第三张肯定是三同之一
-            
+            case 11:
+                return this.calcFlightDouble(cards);
         }
         return 0;
     }
@@ -218,6 +206,57 @@ class CardUtils
             }
         }
         return temp;
+    }
+
+    /**
+     * 专门用来计算飞机带对子的头子
+    */
+    private calcFlightDouble(arr:Array<number>):number
+    {
+        //先找到有三张的
+        let temp = [];
+        for(let i = 0; i < arr.length; i++)
+        {
+            let num = 0;
+            for(let j = 0; j < arr.length; j++)
+            {
+                if(arr[i] == arr[j])
+                {
+                    num++;
+                }                
+            }
+            if(num == 3)
+            {
+                if(temp.indexOf(arr[i]) == -1)
+                {
+                    temp.push(arr[i]);
+                }       
+            }
+        }
+        return temp[0] - temp[1] > 0 ? temp[1] : temp[0];
+    }
+
+
+    /**将牌组转换出index*/
+    public transCardsToIndex(choosenCard:Array<Card>):Array<number>
+    {
+        let arr = [];
+        for(let i = 0; i < choosenCard.length; i++)
+        {
+            arr.push(choosenCard[i].index);
+        }
+        return arr;
+    }
+
+    /**讲牌组转换出point*/
+    public transCardsToPoint(choosenCard:Array<Card>):Array<number>
+    {
+        let arr = [];
+        for(let i = 0; i < choosenCard.length; i++)
+        {
+            arr.push(choosenCard[i].point);
+        }
+        return arr;
     }
 };
 

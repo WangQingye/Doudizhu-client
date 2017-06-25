@@ -254,12 +254,12 @@ class Doudizhu extends eui.Component
             card.onTouch = true;
             this.cardArr.push(card);
         }
-        if(this.cardUtils.canPlay(this.curCards, this.cardUtils.transCardsToPoint(this.cardArr))) this.btn_yes.enabled = true;
+        if(this.cardUtils.canPlay(this.curCards, this.cardArr)) this.btn_yes.enabled = true;
     };
 
     /**点击出牌按钮*/
     private playCard():void    
-    {           
+    {
         var data = new BaseMsg();
         data.command = Commands.PLAYER_PLAYCARD;
         data.content = {index:this.mySeat, cards: this.cardUtils.transCardsToIndex(this.cardArr)};
@@ -277,7 +277,7 @@ class Doudizhu extends eui.Component
     /**点击过*/
     private playNo():void
     {
-
+        
     }
 
 
