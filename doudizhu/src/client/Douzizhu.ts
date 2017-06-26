@@ -192,7 +192,7 @@ class Doudizhu extends eui.Component
     }
 
 
-    /**扑克显示*/
+/**=========================扑克显示=============================*/
     private my_poker:eui.Group;
     private right_poker:eui.Group;
     private left_poker:eui.Group;
@@ -234,10 +234,11 @@ class Doudizhu extends eui.Component
          }
     }
 
-
+/**=========================出牌逻辑=============================*/
     private onMyTurn:boolean = false; //是否该我出牌
     private cardArr:Array<Card> = [];//准备出的牌组（点起来的）
     private curCards:CUR_CARDS
+    /**点击扑克*/
     private cardOnTouch(e:egret.TouchEvent):void
     {
         if(!this.onMyTurn) return; //不该我出牌的时候点不动
@@ -258,26 +259,32 @@ class Doudizhu extends eui.Component
     };
 
     /**点击出牌按钮*/
-    private playCard():void    
+    private playCard():void
     {
+        let type = CardUtils.getInstance().calcCardType(this.cardArr);
+        let header = CardUtils.getInstance().calcHeadPoker(type, this.cardArr);
         var data = new BaseMsg();
         data.command = Commands.PLAYER_PLAYCARD;
-        data.content = {index:this.mySeat, cards: this.cardUtils.transCardsToIndex(this.cardArr)};
-        NetController.getInstance().sendData(data, this.onPlayCardBack, this);    
+        data.content = { index:this.mySeat, curCards:{type:type, header:header, cards:this.cardUtils.transCardsToIndex(this.cardArr)}};
+        NetController.getInstance().sendData(data, this.onPlayCardBack, this);
     }
     /**获得出牌的返回消息*/
     private onPlayCardBack(data:BaseMsg):void
     {
         if(data.code == 0)
         {
-            console.log('出牌成功1');
+            console.log('出牌成功');
         }
     }
 
     /**点击过*/
     private playNo():void
     {
-        
+        let type = CARD_TYPE.PASS_CARDS;
+        var data = new BaseMsg();
+        data.command = Commands.PLAYER_PLAYCARD;
+        data.content = { index:this.mySeat, curCards:{type:type}};
+        NetController.getInstance().sendData(data, this.onPlayCardBack, this);
     }
 
 

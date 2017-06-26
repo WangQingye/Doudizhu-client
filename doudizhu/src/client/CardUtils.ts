@@ -14,10 +14,12 @@ class CardUtils
 
     public canPlay(curCards:CUR_CARDS, choosenCard:Array<Card>):boolean
     {
-        let curHeadPoker =  curCards.small;
+        let curHeadPoker =  curCards.header;
         let curType = curCards.type;
         let choosenType = this.calcCardType(choosenCard);
         let choosenHeadPoker = this.calcHeadPoker(choosenType, choosenCard);
+        /**如果牌型等于-1，说明是第一个出牌的，只要不是错误牌型就可以出牌*/
+        if(curType == -1 && choosenType !== 0) return true;
         /**牌型一致，头子更大*/
         if(curType == choosenType && choosenHeadPoker > curHeadPoker)
         {
@@ -25,7 +27,7 @@ class CardUtils
         }else
         {
             return false;
-        }       
+        }
     }
 
     /**
@@ -98,6 +100,7 @@ class CardUtils
     public calcHeadPoker(type:CARD_TYPE, choosenCard:Array<Card>):number
     {
         let cards = this.transCardsToPoint(choosenCard);
+        cards.sort();
         switch(type)
         {
             case 1:
@@ -233,7 +236,15 @@ class CardUtils
                 }       
             }
         }
-        return temp[0] - temp[1] > 0 ? temp[1] : temp[0];
+        let max = 0;
+        for( let j = 0; j < temp.length; j++)
+        {
+            if( temp[j] > max)
+            {
+                max = temp[j];
+            }
+        }
+        return max;
     }
 
 
@@ -265,7 +276,9 @@ class CardUtils
 */
 class CARD_TYPE
 {    //各种牌型的对应数字
-    public static NO_CARDS = 0; //错误牌型
+    public static PASS_CARDS = -2; //过
+    public static NO_CARDS = -1; //前面还没有牌（首家）
+    public static ERROR_CARDS = 0; //错误牌型
     public static SINGLE_CARD = 1; //单牌
     public static DOUBLE_CARD = 2; //对子
     public static THREE_CARD = 3;//3不带
@@ -284,13 +297,13 @@ class CARD_TYPE
 /**
  * 当前桌面上的牌（上家的牌）
 */
-//{type: CARD_TYPE.NO_CARDS, small:0, cards:[]};
+//{type: CARD_TYPE.NO_CARDS, header:0, cards:[]};
 class CUR_CARDS
 {
     /**牌型*/
     public type:CARD_TYPE;
     /**头子（头子中最小的那张）*/
-    public small:number;
+    public header:number;
     /**具体是哪些牌,用于展示在桌面上(index)*/
     public cards:Array<number>;
 }
