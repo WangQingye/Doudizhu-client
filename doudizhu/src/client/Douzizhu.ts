@@ -60,6 +60,7 @@ class Doudizhu extends eui.Component
 			.to({rotation:5}, 500, egret.Ease.backInOut)
     }
 
+    private roomId:number /**所在的游戏房间*/
     private my_id:eui.Label;
     private left_id:eui.Label;
     private right_id:eui.Label;
@@ -74,6 +75,7 @@ class Doudizhu extends eui.Component
         {
             console.log('匹配成功' + '玩家有：' + data.content.players);
             let players = data.content.players;
+            this.roomId = data.content.roomId;
             this.start_tip.visible = false;
             for( let i = 0; i < players.length; i++)
             {
@@ -160,7 +162,7 @@ class Doudizhu extends eui.Component
         {
             this.onMyTurn = true;
         }
-        this.curCards = content.curCards;
+        this.curCards = content.curCard;
         console.log('onRecivePlayGame', content);
     }
 
@@ -241,6 +243,7 @@ class Doudizhu extends eui.Component
     /**点击扑克*/
     private cardOnTouch(e:egret.TouchEvent):void
     {
+        console.warn(this.curCards);
         if(!this.onMyTurn) return; //不该我出牌的时候点不动
         let card = <Card>e.target;
         if(card.onTouch)
@@ -255,7 +258,13 @@ class Doudizhu extends eui.Component
             card.onTouch = true;
             this.cardArr.push(card);
         }
-        if(this.cardUtils.canPlay(this.curCards, this.cardArr)) this.btn_yes.enabled = true;
+        if(this.cardUtils.canPlay(this.curCards, this.cardArr))
+        {
+            this.btn_yes.enabled = true;
+        }else
+        {
+            this.btn_yes.enabled = false;
+        }
     };
 
     /**点击出牌按钮*/
@@ -265,7 +274,7 @@ class Doudizhu extends eui.Component
         let header = CardUtils.getInstance().calcHeadPoker(type, this.cardArr);
         var data = new BaseMsg();
         data.command = Commands.PLAYER_PLAYCARD;
-        data.content = { index:this.mySeat, curCards:{type:type, header:header, cards:this.cardUtils.transCardsToIndex(this.cardArr)}};
+        data.content = { roomId:this.roomId, index:this.mySeat, curCards:{type:type, header:header, cards:this.cardUtils.transCardsToIndex(this.cardArr)}};
         NetController.getInstance().sendData(data, this.onPlayCardBack, this);
     }
     /**获得出牌的返回消息*/

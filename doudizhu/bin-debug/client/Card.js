@@ -1,14 +1,8 @@
-var __reflect = (this && this.__reflect) || function (p, c, t) {
-    p.__class__ = c, t ? t.push(c) : t = [c], p.__types__ = p.__types__ ? t.concat(p.__types__) : t;
-};
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
 /**
  * 总数54张，资源名 1-54
- * 扑克牌序号排序是从3点到大小王
+ * 扑克牌序号排序是从3点到大小王:对应顺序如下
+ * 3 4 5 6 7 8 9 10 J  Q  K  A  2  KING
+ * 3 4 5 6 7 8 9 10 11 12 13 14 15 16
  * 举例：四张3点1，2，3，4
  * 同点数排序规则 红黑梅方（斗地主可能用不上）
  * 需要提供一个将序号转为点数的方法，用来对比是否是同点数
@@ -16,30 +10,29 @@ var __extends = (this && this.__extends) || function (d, b) {
 var Card = (function (_super) {
     __extends(Card, _super);
     function Card() {
-        return _super !== null && _super.apply(this, arguments) || this;
+        _super.apply(this, arguments);
     }
-    Object.defineProperty(Card.prototype, "index", {
-        get: function () {
+    var d = __define,c=Card,p=c.prototype;
+    d(p, "index"
+        ,function () {
             return this._index;
-        },
-        set: function (v) {
+        }
+        ,function (v) {
             this._index = v;
             this.source = v + "_jpg";
             if (v % 4 == 0) {
-                this.point = v / 4;
+                this.point = v / 4 + 2;
             }
             else {
-                this.point = Math.floor(v / 4) + 1;
+                this.point = Math.floor(v / 4) + 3;
             }
-        },
-        enumerable: true,
-        configurable: true
-    });
-    Object.defineProperty(Card.prototype, "onTouch", {
-        get: function () {
+        }
+    );
+    d(p, "onTouch"
+        ,function () {
             return this._onTouch;
-        },
-        set: function (v) {
+        }
+        ,function (v) {
             this._onTouch = v;
             if (v) {
                 this.y -= 20;
@@ -47,11 +40,9 @@ var Card = (function (_super) {
             else {
                 this.y += 20;
             }
-        },
-        enumerable: true,
-        configurable: true
-    });
+        }
+    );
     return Card;
 }(eui.Image));
-__reflect(Card.prototype, "Card");
+egret.registerClass(Card,'Card');
 //# sourceMappingURL=Card.js.map
