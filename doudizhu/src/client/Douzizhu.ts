@@ -289,10 +289,9 @@ class Doudizhu extends eui.Component
     /**点击过*/
     private playNo():void
     {
-        let type = CARD_TYPE.PASS_CARDS;
         var data = new BaseMsg();
         data.command = Commands.PLAYER_PLAYCARD;
-        data.content = { index:this.mySeat, curCards:{type:type}};
+        data.content = { index:this.mySeat, curCards:{cards:[]}};
         NetController.getInstance().sendData(data, this.onPlayCardBack, this);
     }
 
