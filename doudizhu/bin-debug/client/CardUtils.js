@@ -20,7 +20,23 @@ var CardUtils = (function () {
         /**如果牌型等于-1，说明是第一个出牌的，只要不是错误牌型就可以出牌*/
         if (curType == -1 && choosenType !== 0)
             return true;
-        /**牌型一致，头子更大*/
+        /**老子王炸什么牌不能出？*/
+        if (choosenType == 13)
+            return true;
+        if (curType == 13)
+            return false;
+        /**就算是炸弹，也得看看前面是不是炸弹啊*/
+        if (choosenType == 12) {
+            if (curType == 12) {
+                if (choosenHeadPoker > curHeadPoker) {
+                    return true;
+                }
+            }
+            else {
+                return true;
+            }
+        }
+        /**其余牌型需要牌型一致，头子更大*/
         if (curType == choosenType && choosenHeadPoker > curHeadPoker) {
             return true;
         }

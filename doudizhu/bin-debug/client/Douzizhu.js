@@ -209,16 +209,20 @@ var Doudizhu = (function (_super) {
     };
     /**获得出牌的返回消息*/
     p.onPlayCardBack = function (data) {
+        console.log('获得出牌返回');
         if (data.code == 0) {
             console.log('出牌成功');
+            for (var i = 0; i < this.cardArr.length; i++) {
+                this.removeMyCard(this.cardArr[i].index);
+            }
+            this.cardArr = [];
         }
     };
     /**点击过*/
     p.playNo = function () {
-        var type = CARD_TYPE.PASS_CARDS;
         var data = new BaseMsg();
         data.command = Commands.PLAYER_PLAYCARD;
-        data.content = { index: this.mySeat, curCards: { type: type } };
+        data.content = { roomId: this.roomId, index: this.mySeat, curCards: { cards: [] } };
         NetController.getInstance().sendData(data, this.onPlayCardBack, this);
     };
     return Doudizhu;

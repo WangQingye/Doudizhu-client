@@ -84,6 +84,7 @@
 		<e:layout>
 			<e:BasicLayout/>
 		</e:layout>
+
 	</e:Group>
 	<e:Rect id="rect_1" width="103" height="20" x="175" fillColor="0xff0000" verticalCenter="-73" visible="false"/>
 	<e:Rect id="rect_3" width="103" height="20" x="846" fillColor="0xFF0000" verticalCenter="-73" visible="false"/>
