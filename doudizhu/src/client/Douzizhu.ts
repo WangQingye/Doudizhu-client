@@ -158,11 +158,16 @@ class Doudizhu extends eui.Component
     {
         let seat = content.curPlayerIndex;
         this.showRect(seat);
-        if(seat == this.mySeat)
-        {
-            this.onMyTurn = true;
-        }
+        if(seat == this.mySeat) this.onMyTurn = true;
         this.curCards = content.curCard;
+        if(this.curCards.cards.length == 0)
+        {
+            //等于0说明上家是过牌
+            
+        }else
+        {
+
+        }
         console.log('onRecivePlayGame', content);
     }
 
@@ -200,7 +205,7 @@ class Doudizhu extends eui.Component
     private left_poker:eui.Group;
     /**准备出的牌，根据这个数组里的牌来判断是否可以出牌*/
     private onTouchPoker: Array<number>; 
-    private refreshMyCard(arr:[number]):void
+    private refreshMyCard(arr:Array<number>):void
     {
         for(let i = 0; i < arr.length; i++)
         {
@@ -211,30 +216,49 @@ class Doudizhu extends eui.Component
     /**移除他人的扑克牌，只需要知道几张，和几号位*/
     private removeOtherCard(num:number, seat:number):void
     {
+        let parent = seat == this.rightSeat ? this.right_poker : this.left_poker;
+
         while(num)
         {
-            if(seat == this.rightSeat)
-            {
-                this.right_poker.removeChildAt(this.right_poker.numChildren - 1);
-            }else
-            {
-                this.left_poker.removeChildAt(this.right_poker.numChildren - 1);
-            }
+            this.CardPool.push(<Card>parent.getChildAt(parent.numChildren - 1));
+            parent.removeChildAt(parent.numChildren - 1);
             num--;
         }
     }
     /**自己的牌需要根据序号来移除*/
-    private removeMyCard(index:number):void
+    private removeMyCard(cards:Array<Card>):void
     {
-        for(let i = 0; i < this.my_poker.numChildren; i++)
-         {
-             let card = <Card>this.my_poker.getChildAt(i);
-             if(card.index == index)
-             {
-                 this.my_poker.removeChildAt(i);
-             }
-         }
+        for(let i = 0; i < this.cardArr.length; i++)
+        {
+            for(let j= 0; j< this.my_poker.numChildren; j++)
+            {
+                let card = <Card>this.my_poker.getChildAt(j);
+                if(card.index == this.cardArr[i].index)
+                {
+                    this.CardPool.push(card);
+                    this.my_poker.removeChildAt(j);
+                }
+            }
+        }
+        /**删除卡牌后再调整一下位置*/
+        for(let k= 0; k< this.my_poker.numChildren; k++)
+        {
+            let card = <Card>this.my_poker.getChildAt(k);
+            card.x = 35*k;
+        }
     }
+    private CardPool:Array<Card>
+    /**卡牌对象池*/
+    private getCard():Card
+    {
+        if(this.CardPool.length < 1)
+        {
+            return new Card();
+        }else
+        {
+            return this.CardPool.pop();
+        }
+    };
 
 /**=========================出牌逻辑=============================*/
     private onMyTurn:boolean = false; //是否该我出牌
@@ -284,10 +308,11 @@ class Doudizhu extends eui.Component
         if(data.code == 0)
         {
             console.log('出牌成功');
-            for(let i = 0; i < this.cardArr.length; i++)
-            {
-                this.removeMyCard(this.cardArr[i].index);
-            }
+            // for(let i = 0; i < this.cardArr.length; i++)
+            // {
+            //     this.removeMyCard(this.cardArr[i].index);
+            // }
+            this.removeMyCard(this.cardArr);
             this.cardArr = [];
         }
     }

@@ -165,13 +165,32 @@ var Doudizhu = (function (_super) {
             num--;
         }
     };
+    // /**自己的牌需要根据序号来移除*/
+    // private removeMyCard(index:number):void
+    // {
+    //     for(let i = 0; i < this.my_poker.numChildren; i++)
+    //      {
+    //          let card = <Card>this.my_poker.getChildAt(i);
+    //          if(card.index == index)
+    //          {
+    //              this.my_poker.removeChildAt(i);
+    //          }
+    //      }
+    // }
     /**自己的牌需要根据序号来移除*/
-    p.removeMyCard = function (index) {
-        for (var i = 0; i < this.my_poker.numChildren; i++) {
-            var card = this.my_poker.getChildAt(i);
-            if (card.index == index) {
-                this.my_poker.removeChildAt(i);
+    p.removeMyCard = function (cards) {
+        for (var i = 0; i < this.cardArr.length; i++) {
+            for (var j = 0; j < this.my_poker.numChildren; j++) {
+                var card = this.my_poker.getChildAt(j);
+                if (card.index == this.cardArr[i].index) {
+                    this.my_poker.removeChildAt(j);
+                }
             }
+        }
+        /**删除卡牌后再调整一下位置*/
+        for (var k = 0; k < this.my_poker.numChildren; k++) {
+            var card = this.my_poker.getChildAt(k);
+            card.x = 35 * k;
         }
     };
     /**点击扑克*/
@@ -212,9 +231,11 @@ var Doudizhu = (function (_super) {
         console.log('获得出牌返回');
         if (data.code == 0) {
             console.log('出牌成功');
-            for (var i = 0; i < this.cardArr.length; i++) {
-                this.removeMyCard(this.cardArr[i].index);
-            }
+            // for(let i = 0; i < this.cardArr.length; i++)
+            // {
+            //     this.removeMyCard(this.cardArr[i].index);
+            // }
+            this.removeMyCard(this.cardArr);
             this.cardArr = [];
         }
     };
