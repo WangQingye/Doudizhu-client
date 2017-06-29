@@ -205,7 +205,7 @@ var Doudizhu = (function (_super) {
             card.source = 'bg_poker_png';
             this.left_poker.addChild(card);
             var card1 = this.getCard();
-            card.source = 'bg_poker_png';
+            card1.source = 'bg_poker_png';
             this.right_poker.addChild(card1);
         }
     };
