@@ -18,7 +18,7 @@ class CardUtils
         let curType = curCards.type;
         let choosenType = this.calcCardType(choosenCard);
         let choosenHeadPoker = this.calcHeadPoker(choosenType, choosenCard);
-        console.log('当前牌型', choosenType);
+        //console.log('当前牌型', choosenType);
         /**如果牌型等于-1，说明是第一个出牌的，只要不是错误牌型就可以出牌*/
         if(curType == -1 && choosenType !== 0) return true;
         /**老子王炸什么牌不能出？*/
@@ -55,8 +55,8 @@ class CardUtils
     public calcCardType(choosenCard:Array<Card>):number
     {
         let points = this.transCardsToPoint(choosenCard);
-        console.log('计算牌型', points);
-        console.warn('是否连续',this.isNumContinuous(points))
+        //console.log('计算牌型', points);
+        //console.warn('是否连续',this.isNumContinuous(points))
         let len = points.length;
         if(len == 1) //单牌
         {
@@ -73,8 +73,7 @@ class CardUtils
             return 3
         }
         else if(len == 4) 
-        {
-            console.log('走到这了', this.calcSameNum(points));
+        {            
             if(points[0] == points[1] && points[1] == points[2] && points[2] == points[3]) //炸弹
             {
                 return 12;
@@ -122,7 +121,7 @@ class CardUtils
     {
         let cards = this.transCardsToPoint(choosenCard);
         cards.sort();
-        console.log('计算头子', type, cards);
+        //console.log('计算头子', type, cards);
         switch(type)
         {
             case 1:
@@ -197,7 +196,6 @@ class CardUtils
             if(i == arr.length - 1) return true //都进行到最后一个了，说明肯定是连续的啦;
             if(arr[i] != arr[i+1]-1)
             {
-                console.log(arr[i], arr[i+1]);
                 return false;
             }
         }

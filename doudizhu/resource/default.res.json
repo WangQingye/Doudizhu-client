@@ -2,7 +2,7 @@
 	"groups": [
 		{
 			"name": "preload",
-			"keys": "start_png,start_tip_png,bg_png,bg_poker_png,54_jpg,53_jpg,52_jpg,51_jpg,50_jpg,49_jpg,48_jpg,47_jpg,46_jpg,45_jpg,44_jpg,43_jpg,42_jpg,41_jpg,40_jpg,39_jpg,38_jpg,37_jpg,36_jpg,35_jpg,34_jpg,33_jpg,32_jpg,31_jpg,30_jpg,29_jpg,28_jpg,27_jpg,26_jpg,25_jpg,24_jpg,23_jpg,22_jpg,21_jpg,20_jpg,19_jpg,18_jpg,17_jpg,16_jpg,15_jpg,14_jpg,13_jpg,12_jpg,11_jpg,10_jpg,9_jpg,8_jpg,7_jpg,6_jpg,5_jpg,4_jpg,3_jpg,2_jpg,1_jpg,arrow_png,btn_yes_png,btn_no_png,btn_yes_1_png"
+			"keys": "start_png,start_tip_png,bg_png,bg_poker_png,54_jpg,53_jpg,52_jpg,51_jpg,50_jpg,49_jpg,48_jpg,47_jpg,46_jpg,45_jpg,44_jpg,43_jpg,42_jpg,41_jpg,40_jpg,39_jpg,38_jpg,37_jpg,36_jpg,35_jpg,34_jpg,33_jpg,32_jpg,31_jpg,30_jpg,29_jpg,28_jpg,27_jpg,26_jpg,25_jpg,24_jpg,23_jpg,22_jpg,21_jpg,20_jpg,19_jpg,18_jpg,17_jpg,16_jpg,15_jpg,14_jpg,13_jpg,12_jpg,11_jpg,10_jpg,9_jpg,8_jpg,7_jpg,6_jpg,5_jpg,4_jpg,3_jpg,2_jpg,1_jpg,arrow_png,btn_yes_png,btn_no_png,btn_yes_1_png,3score_png,1score_png,2score_png,0score_png"
 		}
 	],
 	"resources": [
@@ -315,6 +315,26 @@
 			"name": "btn_yes_1_png",
 			"type": "image",
 			"url": "image/btn_yes_1.png"
+		},
+		{
+			"name": "3score_png",
+			"type": "image",
+			"url": "image/3score.png"
+		},
+		{
+			"name": "1score_png",
+			"type": "image",
+			"url": "image/1score.png"
+		},
+		{
+			"name": "2score_png",
+			"type": "image",
+			"url": "image/2score.png"
+		},
+		{
+			"name": "0score_png",
+			"type": "image",
+			"url": "image/0score.png"
 		}
 	]
 }

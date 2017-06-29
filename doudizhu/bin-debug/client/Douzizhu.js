@@ -4,6 +4,7 @@ var Doudizhu = (function (_super) {
     function Doudizhu() {
         _super.call(this);
         this.cardUtils = CardUtils.getInstance();
+        this.CardPool = [];
         /**=========================出牌逻辑=============================*/
         this.onMyTurn = false; //是否该我出牌
         this.cardArr = []; //准备出的牌组（点起来的）
@@ -99,7 +100,7 @@ var Doudizhu = (function (_super) {
     };
     /**房间消息*/
     p.onRecivePlayGame = function (content) {
-        //2是结算，1是游戏中, 0是第一次发牌
+        //0是第一次发牌, 1是游戏中, 2是结算分数, 3是抢地主
         var state = content.state;
         if (state == undefined)
             return;
@@ -111,16 +112,41 @@ var Doudizhu = (function (_super) {
                 break;
             case 1:
                 this.onGamePlay(content);
+                break;
+            case 2:
+                this.showGameOver(content);
+                break;
+            case 3:
+                this.onWantDizhu(content);
+                break;
         }
+    };
+    p.onWantDizhu = function (content) {
+        var seat = content.curPlayerIndex;
+        this.showRect(seat);
     };
     /**游戏进程消息*/
     p.onGamePlay = function (content) {
         var seat = content.curPlayerIndex;
         this.showRect(seat);
-        if (seat == this.mySeat) {
-            this.onMyTurn = true;
+        var lastSeat = seat - 1 < 1 ? 3 : seat - 1;
+        var cardType = content.curCard.type;
+        this.onMyTurn = seat == this.mySeat ? true : false;
+        if (cardType == CARD_TYPE.NO_CARDS) {
+            //说明要开始新一轮出牌
+            this.removeAllShowCards();
+            if (this.onMyTurn)
+                this.btn_no.visible = false;
         }
-        this.curCards = content.curCard;
+        if (cardType == CARD_TYPE.PASS_CARDS) {
+            //等于-2说明上家是过牌
+            this.showCards(lastSeat, true);
+        }
+        else {
+            //不是过牌才记录新牌
+            this.curCards = content.curCard;
+            this.showCards(lastSeat);
+        }
         console.log('onRecivePlayGame', content);
     };
     p.showRect = function (index) {
@@ -155,34 +181,20 @@ var Doudizhu = (function (_super) {
     };
     /**移除他人的扑克牌，只需要知道几张，和几号位*/
     p.removeOtherCard = function (num, seat) {
+        var parent = seat == this.rightSeat ? this.right_poker : this.left_poker;
         while (num) {
-            if (seat == this.rightSeat) {
-                this.right_poker.removeChildAt(this.right_poker.numChildren - 1);
-            }
-            else {
-                this.left_poker.removeChildAt(this.right_poker.numChildren - 1);
-            }
+            this.CardPool.push(parent.getChildAt(parent.numChildren - 1));
+            parent.removeChildAt(parent.numChildren - 1);
             num--;
         }
     };
-    // /**自己的牌需要根据序号来移除*/
-    // private removeMyCard(index:number):void
-    // {
-    //     for(let i = 0; i < this.my_poker.numChildren; i++)
-    //      {
-    //          let card = <Card>this.my_poker.getChildAt(i);
-    //          if(card.index == index)
-    //          {
-    //              this.my_poker.removeChildAt(i);
-    //          }
-    //      }
-    // }
     /**自己的牌需要根据序号来移除*/
     p.removeMyCard = function (cards) {
         for (var i = 0; i < this.cardArr.length; i++) {
             for (var j = 0; j < this.my_poker.numChildren; j++) {
                 var card = this.my_poker.getChildAt(j);
                 if (card.index == this.cardArr[i].index) {
+                    this.CardPool.push(card);
                     this.my_poker.removeChildAt(j);
                 }
             }
@@ -191,6 +203,66 @@ var Doudizhu = (function (_super) {
         for (var k = 0; k < this.my_poker.numChildren; k++) {
             var card = this.my_poker.getChildAt(k);
             card.x = 35 * k;
+        }
+    };
+    /**卡牌对象池*/
+    p.getCard = function () {
+        if (this.CardPool.length < 1) {
+            return new Card();
+        }
+        else {
+            return this.CardPool.pop();
+        }
+    };
+    ;
+    /**显示出的牌（包括过）*/
+    p.showCards = function (index, showPass) {
+        if (showPass === void 0) { showPass = false; }
+        console.warn(index, showPass);
+        var parent;
+        switch (index) {
+            case this.leftSeat:
+                parent = 'left';
+                break;
+            case this.rightSeat:
+                parent = 'right';
+                break;
+            case this.mySeat:
+                parent = 'my';
+                break;
+        }
+        var group = this[parent + '_poker1'];
+        group.removeChildren();
+        if (showPass) {
+            this[parent + '_pass'].visible = true;
+            return;
+        }
+        else {
+            this[parent + '_pass'].visible = false;
+        }
+        var card;
+        for (var i = 0; i < this.curCards.cards.length; i++) {
+            card = this.getCard();
+            card.index = this.curCards.cards[i];
+            card.source = card.index + "_jpg";
+            console.warn(card.index);
+            group.addChild(card);
+        }
+        if (index != this.mySeat) {
+            this.removeOtherCard(this.curCards.cards.length, index);
+        }
+    };
+    /**清楚桌子上展示的牌（每次新出牌次）*/
+    p.removeAllShowCards = function () {
+        var groups = [this['my_poker1'], this['left_poker1'], this['right_poker1']];
+        this['my_pass'].visible = false;
+        this['left_pass'].visible = false;
+        this['right_pass'].visible = false;
+        for (var i = 0; i < groups.length; i++) {
+            for (var j = 0; j < groups[i].numChildren; j++) {
+                this.CardPool.push(groups[i].getChildAt(j));
+            }
+            groups[i].removeChildren();
         }
     };
     /**点击扑克*/
@@ -243,7 +315,7 @@ var Doudizhu = (function (_super) {
     p.playNo = function () {
         var data = new BaseMsg();
         data.command = Commands.PLAYER_PLAYCARD;
-        data.content = { roomId: this.roomId, index: this.mySeat, curCards: { cards: [] } };
+        data.content = { roomId: this.roomId, index: this.mySeat, curCards: { type: CARD_TYPE.PASS_CARDS, cards: [] } };
         NetController.getInstance().sendData(data, this.onPlayCardBack, this);
     };
     return Doudizhu;

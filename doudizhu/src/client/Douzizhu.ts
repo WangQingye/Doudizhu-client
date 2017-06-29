@@ -132,7 +132,7 @@ class Doudizhu extends eui.Component
     /**房间消息*/
     private onRecivePlayGame(content):void
     {
-        //2是结算，1是游戏中, 0是第一次发牌
+        //0是第一次发牌, 1是游戏中, 2是结算分数, 3是抢地主
         let state = content.state;
         if(state == undefined) return;
         switch(state)
@@ -144,42 +144,72 @@ class Doudizhu extends eui.Component
                 break;
             case 1 :
                 this.onGamePlay(content);
+                break;
+            case 2 :
+                this.showGameOver(content);
+                break;
+            case 3 :
+                this.onWantDizhu(content);
+                break;
         }
     }
 
+    private onWantDizhu(content):void
+    {
+        let seat = content.curPlayerIndex;
+        this.showRect(seat);
+        this.onMyTurn = seat == this.mySeat ? true : false;
+        if(this.onMyTurn)
+        {
+            this['1score'].visible = true;
+            this['2score'].visible = true;
+            this['3score'].visible = true;
+        }
+    }
 
-    private rect_1:eui.Rect;
-    private rect_2:eui.Rect;
-    private rect_3:eui.Rect;
-    private btn_yes:eui.Button;
-    private btn_no:eui.Button;
     /**游戏进程消息*/
     private onGamePlay(content):void
     {
         let seat = content.curPlayerIndex;
         this.showRect(seat);
-        if(seat == this.mySeat) this.onMyTurn = true;
-        this.curCards = content.curCard;
-        if(this.curCards.cards.length == 0)
+        let lastSeat = seat - 1 < 1  ? 3 : seat - 1;
+        let cardType = content.curCard.type;
+        this.onMyTurn = seat == this.mySeat ? true : false;
+        if(cardType == CARD_TYPE.NO_CARDS)
         {
-            //等于0说明上家是过牌
-            
+            //说明要开始新一轮出牌
+            this.removeAllShowCards();
+            if(this.onMyTurn) this.btn_no.visible = false;
+        }
+        if(cardType == CARD_TYPE.PASS_CARDS)
+        {
+            //等于-2说明上家是过牌
+            this.showCards(lastSeat, true);
         }else
         {
-
+            //不是过牌才记录新牌
+            this.curCards = content.curCard;
+            this.showCards(lastSeat);
         }
         console.log('onRecivePlayGame', content);
     }
 
+
+
+    private rect_1:eui.Label;
+    private rect_2:eui.Label;
+    private rect_3:eui.Label;
+    private btn_yes:eui.Button;
+    private btn_no:eui.Button;
     private showRect(index:number):void
     {
         if(index == this.leftSeat)
         {
             this.rect_1.visible = true;
             this.rect_2.visible = false;
-            this.rect_3.visible = false;            
+            this.rect_3.visible = false;
             this.btn_no.visible = false;
-            this.btn_yes.visible = false;            
+            this.btn_yes.visible = false;
         }else if(index == this.mySeat)
         {
             this.rect_1.visible = false;
@@ -247,7 +277,7 @@ class Doudizhu extends eui.Component
             card.x = 35*k;
         }
     }
-    private CardPool:Array<Card>
+    private CardPool:Array<Card> = [];
     /**卡牌对象池*/
     private getCard():Card
     {
@@ -259,6 +289,66 @@ class Doudizhu extends eui.Component
             return this.CardPool.pop();
         }
     };
+
+    /**显示出的牌（包括过）*/
+    private showCards(index:number, showPass:boolean = false)
+    {
+        console.warn(index, showPass);
+        let parent;
+        switch(index)
+        {
+            case this.leftSeat:
+                parent = 'left';
+                break;
+            case this.rightSeat:
+                parent = 'right';
+                break;
+            case this.mySeat:
+                parent = 'my';
+                break;
+        }
+        let group = <eui.Group>this[parent+'_poker1'];
+        group.removeChildren();
+        if(showPass)
+        {
+            this[parent+'_pass'].visible = true;
+            return;
+        }else
+        {
+            this[parent+'_pass'].visible = false;
+        }
+        let card;
+        for(let i = 0; i < this.curCards.cards.length; i++)
+        {
+            card = <Card>this.getCard();
+            card.index = this.curCards.cards[i];
+            card.source =  card.index + "_jpg";
+            console.warn(card.index);
+            group.addChild(card);
+        }
+        if(index != this.mySeat)
+        {
+            this.removeOtherCard(this.curCards.cards.length, index);
+        }
+    }
+
+    /**清楚桌子上展示的牌（每次新出牌次）*/
+    private removeAllShowCards():void
+    {
+        let groups = [this['my_poker1'],this['left_poker1'],this['right_poker1']];
+        this['my_pass'].visible = false;
+        this['left_pass'].visible = false;
+        this['right_pass'].visible = false;
+        for(let i = 0; i < groups.length; i++)
+        {
+            for(let j= 0; j< groups[i].numChildren; j++)
+            {
+                this.CardPool.push(<Card>groups[i].getChildAt(j));                
+            }
+            groups[i].removeChildren();
+        }
+    }
+
 
 /**=========================出牌逻辑=============================*/
     private onMyTurn:boolean = false; //是否该我出牌
@@ -319,10 +409,10 @@ class Doudizhu extends eui.Component
 
     /**点击过*/
     private playNo():void
-    {
+    {        
         var data = new BaseMsg();
         data.command = Commands.PLAYER_PLAYCARD;
-        data.content = { roomId:this.roomId, index:this.mySeat, curCards:{cards:[]}};
+        data.content = { roomId:this.roomId, index:this.mySeat, curCards:{ type:CARD_TYPE.PASS_CARDS, cards:[]}};
         NetController.getInstance().sendData(data, this.onPlayCardBack, this);
     }
 
