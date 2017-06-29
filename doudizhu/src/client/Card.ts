@@ -21,7 +21,6 @@ class Card extends eui.Image
     public set index(v : number) {
         this._index = v;
         this.source = v + "_jpg";
-        console.warn('设置了' + this.source);
         if(v % 4 == 0)
         {
             this.point = v/4 + 2;

@@ -32,9 +32,15 @@ class Doudizhu extends eui.Component
         this.my_poker.addEventListener(egret.TouchEvent.TOUCH_TAP, this.cardOnTouch, this);
         this.btn_yes.addEventListener(egret.TouchEvent.TOUCH_TAP, this.playCard, this);
         this.btn_no.addEventListener(egret.TouchEvent.TOUCH_TAP, this.playNo, this);
+        this.score0.addEventListener(egret.TouchEvent.TOUCH_TAP, this.wantDizhu, this);
+        this.score1.addEventListener(egret.TouchEvent.TOUCH_TAP, this.wantDizhu, this);
+        this.score2.addEventListener(egret.TouchEvent.TOUCH_TAP, this.wantDizhu, this);
+        this.score3.addEventListener(egret.TouchEvent.TOUCH_TAP, this.wantDizhu, this);
         NetController.getInstance().addListener(Commands.ROOM_NOTIFY, this);
         NetController.getInstance().addListener(Commands.PLAY_GAME, this);
+        NetController.getInstance().addListener(Commands.PLAYER_WANTDIZHU, this);
         NetController.getInstance().connect();
+        this.initCards();
     }
 
     /**开始匹配游戏*/
@@ -116,15 +122,17 @@ class Doudizhu extends eui.Component
     /**收到服务器消息*/
     private onReciveMsg(data:BaseMsg)
     {
-        console.warn('onReciveMsg');
         let command = data.command;
+        console.warn('onReciveMsg', command);
         switch (command)
         {
             case Commands.ROOM_NOTIFY:
                 //this.onReciveRoomNotify(data.content);
                 break;
             case Commands.PLAY_GAME:
+            case Commands.PLAYER_WANTDIZHU:
                 this.onRecivePlayGame(data.content);
+                break;
             /*留下其他*/
         }
     }
@@ -134,19 +142,19 @@ class Doudizhu extends eui.Component
     {
         //0是第一次发牌, 1是游戏中, 2是结算分数, 3是抢地主
         let state = content.state;
+        console.warn('state', state);
         if(state == undefined) return;
         switch(state)
         {
             case 0 :
                 let cards = content.cards;
-                console.log('cards',cards);
                 this.refreshMyCard(cards.sort(function(a,b){return b-a}));
                 break;
             case 1 :
                 this.onGamePlay(content);
                 break;
             case 2 :
-                this.showGameOver(content);
+                this.onGameOver(content);
                 break;
             case 3 :
                 this.onWantDizhu(content);
@@ -154,16 +162,34 @@ class Doudizhu extends eui.Component
         }
     }
 
+
+    private score0:eui.Button;
+    private score1:eui.Button;
+    private score2:eui.Button;
+    private score3:eui.Button;
     private onWantDizhu(content):void
     {
         let seat = content.curPlayerIndex;
-        this.showRect(seat);
-        this.onMyTurn = seat == this.mySeat ? true : false;
-        if(this.onMyTurn)
+        let nowScore = content.nowScore;
+        let dizhu = content.dizhu;
+        if(dizhu) //地主已经有了
         {
-            this['1score'].visible = true;
-            this['2score'].visible = true;
-            this['3score'].visible = true;
+
+        }else
+        {
+            this.showRect(seat);
+            if(seat == this.mySeat)
+            {
+                for(let i = 1; i < 4; i++)
+                {
+                    if(i > nowScore)
+                    {
+                        this['score' + i].visible = true;
+                    }
+                    this.score0.visible = true;//不抢的按钮肯定要一直亮啊，还不准人家不抢么。。
+                }
+                this.btn_yes.visible = false;
+            }
         }
     }
 
@@ -192,6 +218,11 @@ class Doudizhu extends eui.Component
             this.showCards(lastSeat);
         }
         console.log('onRecivePlayGame', content);
+    }
+
+    private onGameOver(content):void
+    {
+
     }
 
     private rect_1:eui.Label;
@@ -232,7 +263,20 @@ class Doudizhu extends eui.Component
     private right_poker:eui.Group;
     private left_poker:eui.Group;
     /**准备出的牌，根据这个数组里的牌来判断是否可以出牌*/
-    private onTouchPoker: Array<number>; 
+    private onTouchPoker: Array<number>;
+    /**初始界面*/
+    private initCards():void
+    {
+        for(let i = 0; i < 17; i++)
+        {
+            let card = this.getCard();
+            card.source = 'bg_poker_png';
+            this.left_poker.addChild(card);
+            let card1 = this.getCard();
+            card1.source = 'bg_poker_png';
+            this.right_poker.addChild(card1);
+        }
+    }
     private refreshMyCard(arr:Array<number>):void
     {
         for(let i = 0; i < arr.length; i++)
@@ -396,10 +440,6 @@ class Doudizhu extends eui.Component
         if(data.code == 0)
         {
             console.log('出牌成功');
-            // for(let i = 0; i < this.cardArr.length; i++)
-            // {
-            //     this.removeMyCard(this.cardArr[i].index);
-            // }
             this.removeMyCard(this.cardArr);
             this.cardArr = [];
         }
@@ -412,6 +452,29 @@ class Doudizhu extends eui.Component
         data.command = Commands.PLAYER_PLAYCARD;
         data.content = { roomId:this.roomId, index:this.mySeat, curCards:{ type:CARD_TYPE.PASS_CARDS, cards:[]}};
         NetController.getInstance().sendData(data, this.onPlayCardBack, this);
+    }
+
+    /**抢地主*/
+    private wantDizhu(e:egret.TouchEvent):void
+    {
+        let score = parseInt(e.target.name);
+        var data = new BaseMsg();
+        data.command = Commands.PLAYER_WANTDIZHU;
+        data.content = { roomId:this.roomId, index:this.mySeat, score:score};
+        NetController.getInstance().sendData(data, this.onWantDizhuBack, this);
+    }
+
+    private onWantDizhuBack(data:BaseMsg):void
+    {
+        console.log('获得抢地主返回')
+        if(data.code == 0)
+        {
+            console.log('抢地主成功');
+            this.score0.visible = false;
+            this.score1.visible = false;
+            this.score2.visible = false;
+            this.score3.visible = false;
+        }
     }
 
 /**=========================抢地主逻辑=============================*/

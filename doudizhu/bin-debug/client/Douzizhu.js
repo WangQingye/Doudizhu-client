@@ -27,9 +27,15 @@ var Doudizhu = (function (_super) {
         this.my_poker.addEventListener(egret.TouchEvent.TOUCH_TAP, this.cardOnTouch, this);
         this.btn_yes.addEventListener(egret.TouchEvent.TOUCH_TAP, this.playCard, this);
         this.btn_no.addEventListener(egret.TouchEvent.TOUCH_TAP, this.playNo, this);
+        this.score0.addEventListener(egret.TouchEvent.TOUCH_TAP, this.wantDizhu, this);
+        this.score1.addEventListener(egret.TouchEvent.TOUCH_TAP, this.wantDizhu, this);
+        this.score2.addEventListener(egret.TouchEvent.TOUCH_TAP, this.wantDizhu, this);
+        this.score3.addEventListener(egret.TouchEvent.TOUCH_TAP, this.wantDizhu, this);
         NetController.getInstance().addListener(Commands.ROOM_NOTIFY, this);
         NetController.getInstance().addListener(Commands.PLAY_GAME, this);
+        NetController.getInstance().addListener(Commands.PLAYER_WANTDIZHU, this);
         NetController.getInstance().connect();
+        this.initCards();
     };
     /**开始匹配游戏*/
     p.matchPlayer = function () {
@@ -88,33 +94,35 @@ var Doudizhu = (function (_super) {
     };
     /**收到服务器消息*/
     p.onReciveMsg = function (data) {
-        console.warn('onReciveMsg');
         var command = data.command;
+        console.warn('onReciveMsg', command);
         switch (command) {
             case Commands.ROOM_NOTIFY:
                 //this.onReciveRoomNotify(data.content);
                 break;
             case Commands.PLAY_GAME:
+            case Commands.PLAYER_WANTDIZHU:
                 this.onRecivePlayGame(data.content);
+                break;
         }
     };
     /**房间消息*/
     p.onRecivePlayGame = function (content) {
         //0是第一次发牌, 1是游戏中, 2是结算分数, 3是抢地主
         var state = content.state;
+        console.warn('state', state);
         if (state == undefined)
             return;
         switch (state) {
             case 0:
                 var cards = content.cards;
-                console.log('cards', cards);
                 this.refreshMyCard(cards.sort(function (a, b) { return b - a; }));
                 break;
             case 1:
                 this.onGamePlay(content);
                 break;
             case 2:
-                this.showGameOver(content);
+                this.onGameOver(content);
                 break;
             case 3:
                 this.onWantDizhu(content);
@@ -123,7 +131,22 @@ var Doudizhu = (function (_super) {
     };
     p.onWantDizhu = function (content) {
         var seat = content.curPlayerIndex;
-        this.showRect(seat);
+        var nowScore = content.nowScore;
+        var dizhu = content.dizhu;
+        if (dizhu) {
+        }
+        else {
+            this.showRect(seat);
+            if (seat == this.mySeat) {
+                for (var i = 1; i < 4; i++) {
+                    if (i > nowScore) {
+                        this['score' + i].visible = true;
+                    }
+                    this.score0.visible = true; //不抢的按钮肯定要一直亮啊，还不准人家不抢么。。
+                }
+                this.btn_yes.visible = false;
+            }
+        }
     };
     /**游戏进程消息*/
     p.onGamePlay = function (content) {
@@ -149,6 +172,8 @@ var Doudizhu = (function (_super) {
         }
         console.log('onRecivePlayGame', content);
     };
+    p.onGameOver = function (content) {
+    };
     p.showRect = function (index) {
         if (index == this.leftSeat) {
             this.rect_1.visible = true;
@@ -171,6 +196,17 @@ var Doudizhu = (function (_super) {
             this.rect_3.visible = true;
             this.btn_no.visible = false;
             this.btn_yes.visible = false;
+        }
+    };
+    /**初始界面*/
+    p.initCards = function () {
+        for (var i = 0; i < 17; i++) {
+            var card = this.getCard();
+            card.source = 'bg_poker_png';
+            this.left_poker.addChild(card);
+            var card1 = this.getCard();
+            card.source = 'bg_poker_png';
+            this.right_poker.addChild(card1);
         }
     };
     p.refreshMyCard = function (arr) {
@@ -303,10 +339,6 @@ var Doudizhu = (function (_super) {
         console.log('获得出牌返回');
         if (data.code == 0) {
             console.log('出牌成功');
-            // for(let i = 0; i < this.cardArr.length; i++)
-            // {
-            //     this.removeMyCard(this.cardArr[i].index);
-            // }
             this.removeMyCard(this.cardArr);
             this.cardArr = [];
         }
@@ -317,6 +349,24 @@ var Doudizhu = (function (_super) {
         data.command = Commands.PLAYER_PLAYCARD;
         data.content = { roomId: this.roomId, index: this.mySeat, curCards: { type: CARD_TYPE.PASS_CARDS, cards: [] } };
         NetController.getInstance().sendData(data, this.onPlayCardBack, this);
+    };
+    /**抢地主*/
+    p.wantDizhu = function (e) {
+        var score = parseInt(e.target.name);
+        var data = new BaseMsg();
+        data.command = Commands.PLAYER_WANTDIZHU;
+        data.content = { roomId: this.roomId, index: this.mySeat, score: score };
+        NetController.getInstance().sendData(data, this.onWantDizhuBack, this);
+    };
+    p.onWantDizhuBack = function (data) {
+        console.log('获得抢地主返回');
+        if (data.code == 0) {
+            console.log('抢地主成功');
+            this.score0.visible = false;
+            this.score1.visible = false;
+            this.score2.visible = false;
+            this.score3.visible = false;
+        }
     };
     return Doudizhu;
 }(eui.Component));
