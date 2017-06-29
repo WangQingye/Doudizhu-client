@@ -194,8 +194,6 @@ class Doudizhu extends eui.Component
         console.log('onRecivePlayGame', content);
     }
 
-
-
     private rect_1:eui.Label;
     private rect_2:eui.Label;
     private rect_3:eui.Label;
@@ -416,6 +414,6 @@ class Doudizhu extends eui.Component
         NetController.getInstance().sendData(data, this.onPlayCardBack, this);
     }
 
-
+/**=========================抢地主逻辑=============================*/
 
 }
