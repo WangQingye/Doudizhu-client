@@ -133,6 +133,7 @@ var Doudizhu = (function (_super) {
         var seat = content.curPlayerIndex;
         var nowScore = content.nowScore;
         var dizhu = content.dizhu;
+        this.dizhu = dizhu;
         var dizhuCards = content.dizhuCards;
         if (dizhu) {
             //展示一下地主,还有多的牌
@@ -181,6 +182,7 @@ var Doudizhu = (function (_super) {
         for (var index in scores) {
             this['player' + index + '_score'].text = scores[index];
         }
+        console.warn(this.dizhu_label.y, this['player' + this.dizhu].y);
         this.dizhu_label.y = this['player' + this.dizhu].y;
     };
     p.showRect = function (index) {
@@ -237,6 +239,7 @@ var Doudizhu = (function (_super) {
                     card.source = "bg_poker_png";
                     this.left_poker.addChild(card);
                 }
+                this['left_cardNum'].text = 20;
                 break;
             case this.rightSeat:
                 this.dizhu_pic.x = 996;
@@ -246,6 +249,7 @@ var Doudizhu = (function (_super) {
                     card.source = "bg_poker_png";
                     this.right_poker.addChild(card);
                 }
+                this['right_cardNum'].text = 20;
                 break;
         }
     };
@@ -275,6 +279,8 @@ var Doudizhu = (function (_super) {
     /**移除他人的扑克牌，只需要知道几张，和几号位*/
     p.removeOtherCard = function (num, seat) {
         var parent = seat == this.rightSeat ? this.right_poker : this.left_poker;
+        var cardNumLabel = seat == this.rightSeat ? this['right_cardNum'] : this['left_cardNum'];
+        cardNumLabel.text = parseInt(cardNumLabel.text) - num;
         while (num) {
             this.CardPool.push(parent.getChildAt(parent.numChildren - 1));
             parent.removeChildAt(parent.numChildren - 1);

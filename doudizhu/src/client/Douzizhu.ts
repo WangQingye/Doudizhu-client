@@ -234,6 +234,7 @@ class Doudizhu extends eui.Component
         {
             this['player'+ index + '_score'].text = scores[index];
         }
+        console.warn(this.dizhu_label.y , this['player' + this.dizhu].y);
         this.dizhu_label.y = this['player' + this.dizhu].y;
     }
 
@@ -305,6 +306,7 @@ class Doudizhu extends eui.Component
                     card.source = "bg_poker_png";
                     this.left_poker.addChild(card);
                 }
+                this['left_cardNum'].text = 20;
                 break;
             case this.rightSeat:
                 this.dizhu_pic.x = 996;
@@ -315,6 +317,7 @@ class Doudizhu extends eui.Component
                     card.source = "bg_poker_png";
                     this.right_poker.addChild(card);
                 }
+                this['right_cardNum'].text = 20;
                 break;
         }
     }
@@ -360,7 +363,8 @@ class Doudizhu extends eui.Component
     private removeOtherCard(num:number, seat:number):void
     {
         let parent = seat == this.rightSeat ? this.right_poker : this.left_poker;
-
+        let cardNumLabel = seat == this.rightSeat ? this['right_cardNum'] : this['left_cardNum'];
+        cardNumLabel.text = parseInt(cardNumLabel.text) - num;
         while(num)
         {
             this.CardPool.push(<Card>parent.getChildAt(parent.numChildren - 1));

@@ -14,6 +14,8 @@
 	<e:Label id="my_id" text="robat" y="603.67" textColor="0x000000" bold="true" horizontalCenter="0" textAlign="center"/>
 	<e:Label id="left_id" text="robat" textColor="0x000000" bold="true" textAlign="center" x="10" y="459"/>
 	<e:Label id="right_id" text="robat" y="462" textColor="0x000000" bold="true" textAlign="center" x="972"/>
+	<e:Label id="left_cardNum" text="17" x="6" textColor="0x3d0000" verticalCenter="-80" size="25"/>
+	<e:Label id="right_cardNum" text="17" x="1093" textColor="0x3d0000" verticalCenter="-80" size="25"/>
 	<e:Group id="left_poker" width="104" x="40.5" anchorOffsetX="0" anchorOffsetY="0" verticalCenter="-80">
 
 
