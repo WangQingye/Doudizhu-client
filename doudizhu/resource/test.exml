@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <e:Skin class="test" width="1136" height="640" xmlns:e="http://ns.egret.com/eui" xmlns:w="http://ns.egret.com/wing" xmlns:ns1="*">
 	<e:Image left="0" right="0" top="0" bottom="0" source="bg_png"/>
+
 	<e:Button id="start" label="" horizontalCenter="0" verticalCenter="0">
 		<e:skinName>
 			<e:Skin states="up,down,disabled">
@@ -81,6 +82,9 @@
 		<ns1:Card x="490" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<ns1:Card x="525" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<ns1:Card x="560" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="595" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="630" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
+		<ns1:Card x="665" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<e:layout>
 			<e:BasicLayout/>
 		</e:layout>
@@ -172,5 +176,12 @@
 				</e:Skin>
 			</e:skinName>
 		</e:Button>
+	</e:Group>
+	<e:Image id="dizhu_pic" x="411.5" y="605.2" source="dizhu_jpg" scaleX="0.3" scaleY="0.3" visible="false"/>
+	<e:Group id="dizhu_card" y="13" horizontalCenter="0" scaleX="0.5" scaleY="0.5" visible="false">
+		<ns1:Card x="0" y="0" source="bg_poker_png"/>
+		<ns1:Card x="116" y="0" source="bg_poker_png"/>
+		<ns1:Card x="232" y="0" source="bg_poker_png"/>
+		<e:Label text="地主牌：" x="-127" y="60" textColor="0xff3838"/>
 	</e:Group>
 </e:Skin>

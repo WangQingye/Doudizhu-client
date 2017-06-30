@@ -147,8 +147,8 @@ class Doudizhu extends eui.Component
         switch(state)
         {
             case 0 :
-                let cards = content.cards;
-                this.refreshMyCard(cards.sort(function(a,b){return b-a}));
+                this.my_cards = content.cards.sort(function(a,b){return b-a});
+                this.refreshMyCard(this.my_cards);
                 break;
             case 1 :
                 this.onGamePlay(content);
@@ -167,14 +167,17 @@ class Doudizhu extends eui.Component
     private score1:eui.Button;
     private score2:eui.Button;
     private score3:eui.Button;
+    private dizhu:number;
     private onWantDizhu(content):void
     {
         let seat = content.curPlayerIndex;
         let nowScore = content.nowScore;
         let dizhu = content.dizhu;
+        let dizhuCards = content.dizhuCards;
         if(dizhu) //地主已经有了
         {
-
+            //展示一下地主,还有多的牌
+            this.showDizhu(dizhu, dizhuCards);
         }else
         {
             this.showRect(seat);
@@ -257,9 +260,52 @@ class Doudizhu extends eui.Component
         }
     }
 
+    private dizhu_card:eui.Group;
+    private dizhu_pic:eui.Image;
+    /**展示地主*/
+    private showDizhu(dizhu:number, dizhuCards:Array<number>):void
+    {
+        this.dizhu_pic.visible = true;
+        this.dizhu_card.visible = true;
+        for(let i = 0; i < dizhuCards.length; i++)
+        {
+            let card = <Card>this.dizhu_card.getChildAt(i);
+            card.index = dizhuCards[i];
+        }
+        switch(dizhu)
+        {
+            case this.mySeat:
+                this.dizhu_pic.x = 411;
+                this.dizhu_pic.y = 605;
+                this.my_cards = this.my_cards.concat(dizhuCards).sort(function(a,b){return b-a});
+                this.refreshMyCard(this.my_cards);
+                break;
+            case this.leftSeat:
+                this.dizhu_pic.x = 2;
+                this.dizhu_pic.y = 489;
+                for(let i = 0; i < 3; i++)
+                {
+                    let card = this.getCard();
+                    card.source = "bg_poker_png";
+                    this.left_poker.addChild(card);
+                }
+                break;
+            case this.rightSeat:
+                this.dizhu_pic.x = 996;
+                this.dizhu_pic.y = 489;
+                for(let i = 0; i < 3; i++)
+                {
+                    let card = this.getCard();
+                    card.source = "bg_poker_png";
+                    this.right_poker.addChild(card);
+                }
+                break;
+        }
+    }
 
 /**=========================扑克显示=============================*/
     private my_poker:eui.Group;
+    private my_cards:Array<number>;
     private right_poker:eui.Group;
     private left_poker:eui.Group;
     /**准备出的牌，根据这个数组里的牌来判断是否可以出牌*/
@@ -279,11 +325,20 @@ class Doudizhu extends eui.Component
     }
     private refreshMyCard(arr:Array<number>):void
     {
+        if(arr.length == 20)
+        {
+            for(let i = 0; i < 3; i++)
+            {
+                let card = this.getCard();
+                this.my_poker.addChild(card);
+            }
+        }
         for(let i = 0; i < arr.length; i++)
         {
             let card = <Card>this.my_poker.getChildAt(i);
             card.index = arr[i];
         }
+
     }
     /**移除他人的扑克牌，只需要知道几张，和几号位*/
     private removeOtherCard(num:number, seat:number):void
