@@ -115,8 +115,8 @@ var Doudizhu = (function (_super) {
             return;
         switch (state) {
             case 0:
-                var cards = content.cards;
-                this.refreshMyCard(cards.sort(function (a, b) { return b - a; }));
+                this.my_cards = content.cards.sort(function (a, b) { return b - a; });
+                this.refreshMyCard(this.my_cards);
                 break;
             case 1:
                 this.onGamePlay(content);
@@ -133,7 +133,10 @@ var Doudizhu = (function (_super) {
         var seat = content.curPlayerIndex;
         var nowScore = content.nowScore;
         var dizhu = content.dizhu;
+        var dizhuCards = content.dizhuCards;
         if (dizhu) {
+            //展示一下地主,还有多的牌
+            this.showDizhu(dizhu, dizhuCards);
         }
         else {
             this.showRect(seat);
@@ -173,6 +176,12 @@ var Doudizhu = (function (_super) {
         console.log('onRecivePlayGame', content);
     };
     p.onGameOver = function (content) {
+        this.score_panel.visible = true;
+        var scores = content.scores;
+        for (var index in scores) {
+            this['player' + index + '_score'].text = scores[index];
+        }
+        this.dizhu_label.y = this['player' + this.dizhu].y;
     };
     p.showRect = function (index) {
         if (index == this.leftSeat) {
@@ -181,6 +190,8 @@ var Doudizhu = (function (_super) {
             this.rect_3.visible = false;
             this.btn_no.visible = false;
             this.btn_yes.visible = false;
+            this['left_poker1'].visible = false;
+            this['left_pass'].visible = false;
         }
         else if (index == this.mySeat) {
             this.rect_1.visible = false;
@@ -189,6 +200,8 @@ var Doudizhu = (function (_super) {
             this.btn_no.visible = true;
             this.btn_yes.visible = true;
             this.btn_yes.enabled = false; //初始的时候不能出，选择了合适的牌才能出
+            this['my_poker1'].visible = false;
+            this['my_pass'].visible = false;
         }
         else if (index == this.rightSeat) {
             this.rect_1.visible = false;
@@ -196,6 +209,44 @@ var Doudizhu = (function (_super) {
             this.rect_3.visible = true;
             this.btn_no.visible = false;
             this.btn_yes.visible = false;
+            this['right_poker1'].visible = false;
+            this['right_pass'].visible = false;
+        }
+    };
+    /**展示地主*/
+    p.showDizhu = function (dizhu, dizhuCards) {
+        this.dizhu_pic.visible = true;
+        this.dizhu_card.visible = true;
+        for (var i = 0; i < dizhuCards.length; i++) {
+            var card = this.dizhu_card.getChildAt(i);
+            card.index = dizhuCards[i];
+        }
+        switch (dizhu) {
+            case this.mySeat:
+                this.dizhu_pic.x = 411;
+                this.dizhu_pic.y = 605;
+                this.my_cards = this.my_cards.concat(dizhuCards).sort(function (a, b) { return b - a; });
+                this.refreshMyCard(this.my_cards);
+                this.removeMyCard([]); //排一下位置
+                break;
+            case this.leftSeat:
+                this.dizhu_pic.x = 2;
+                this.dizhu_pic.y = 489;
+                for (var i = 0; i < 3; i++) {
+                    var card = this.getCard();
+                    card.source = "bg_poker_png";
+                    this.left_poker.addChild(card);
+                }
+                break;
+            case this.rightSeat:
+                this.dizhu_pic.x = 996;
+                this.dizhu_pic.y = 489;
+                for (var i = 0; i < 3; i++) {
+                    var card = this.getCard();
+                    card.source = "bg_poker_png";
+                    this.right_poker.addChild(card);
+                }
+                break;
         }
     };
     /**初始界面*/
@@ -210,6 +261,12 @@ var Doudizhu = (function (_super) {
         }
     };
     p.refreshMyCard = function (arr) {
+        if (arr.length == 20) {
+            for (var i = 0; i < 3; i++) {
+                var card = this.getCard();
+                this.my_poker.addChild(card);
+            }
+        }
         for (var i = 0; i < arr.length; i++) {
             var card = this.my_poker.getChildAt(i);
             card.index = arr[i];
@@ -271,10 +328,12 @@ var Doudizhu = (function (_super) {
         group.removeChildren();
         if (showPass) {
             this[parent + '_pass'].visible = true;
+            this[parent + '_poker1'].visible = false;
             return;
         }
         else {
             this[parent + '_pass'].visible = false;
+            this[parent + '_poker1'].visible = true;
         }
         var card;
         for (var i = 0; i < this.curCards.cards.length; i++) {

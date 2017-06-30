@@ -36,8 +36,8 @@ var CardUtils = (function () {
                 return true;
             }
         }
-        /**其余牌型需要牌型一致，头子更大*/
-        if (curType == choosenType && choosenHeadPoker > curHeadPoker) {
+        /**其余牌型需要牌型一致，头子更大，张数一致*/
+        if (curType == choosenType && choosenHeadPoker > curHeadPoker && curCards.cards.length == choosenCard.length) {
             return true;
         }
         else {

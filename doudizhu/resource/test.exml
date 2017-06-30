@@ -82,9 +82,6 @@
 		<ns1:Card x="490" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<ns1:Card x="525" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<ns1:Card x="560" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
-		<ns1:Card x="595" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
-		<ns1:Card x="630" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
-		<ns1:Card x="665" y="0" source="bg_poker_png" scaleX="1" scaleY="1"/>
 		<e:layout>
 			<e:BasicLayout/>
 		</e:layout>
@@ -116,17 +113,7 @@
 
 
 
-	<e:Group id="score_panel" width="419" height="232" y="31" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0" visible="false">
-		<e:Rect width="100%" height="100%" x="0" y="0" fillColor="0xa3ffd7"/>
-		<e:Label text="计分板" y="16" textColor="0x000000" bold="true" horizontalCenter="0"/>
-		<e:Label id="player1" text="玩家1：" x="96" y="57" textColor="0x000000"/>
-		<e:Label id="player2" text="玩家2：" x="96" y="110" textColor="0x000000"/>
-		<e:Label id="player3" text="玩家3：" x="96" y="163" textColor="0x000000"/>
-		<e:Label id="player1_score" text="6" x="248" y="57" textColor="0x000000"/>
-		<e:Label id="player2_score" text="-3" x="248" y="110" textColor="0x000000"/>
-		<e:Label id="player3_score" text="-3" x="248" y="163" textColor="0x000000"/>
-		<e:Label id="dizhu_label" text="（地主）" x="10" y="57" textColor="0xff2b2b" bold="true" size="20"/>
-	</e:Group>
+
 	<e:Group id="btn_group" horizontalCenter="0" y="388" width="339">
 		<e:Button id="btn_yes" label="" scaleX="1" scaleY="1" left="0" top="0" visible="false">
 			<e:skinName>
@@ -183,5 +170,16 @@
 		<ns1:Card x="116" y="0" source="bg_poker_png"/>
 		<ns1:Card x="232" y="0" source="bg_poker_png"/>
 		<e:Label text="地主牌：" x="-127" y="60" textColor="0xff3838"/>
+	</e:Group>
+	<e:Group id="score_panel" width="419" height="232" y="31" anchorOffsetX="0" anchorOffsetY="0" horizontalCenter="0" visible="false">
+		<e:Rect width="100%" height="100%" x="0" y="0" fillColor="0xa3ffd7"/>
+		<e:Label text="计分板" y="16" textColor="0x000000" bold="true" horizontalCenter="0"/>
+		<e:Label id="player1" text="玩家1：" x="96" y="57" textColor="0x000000"/>
+		<e:Label id="player2" text="玩家2：" x="96" y="110" textColor="0x000000"/>
+		<e:Label id="player3" text="玩家3：" x="96" y="163" textColor="0x000000"/>
+		<e:Label id="player1_score" text="6" x="248" y="57" textColor="0x000000"/>
+		<e:Label id="player2_score" text="-3" x="248" y="110" textColor="0x000000"/>
+		<e:Label id="player3_score" text="-3" x="248" y="163" textColor="0x000000"/>
+		<e:Label id="dizhu_label" text="（地主）" x="10" y="57" textColor="0xff2b2b" bold="true" size="20"/>
 	</e:Group>
 </e:Skin>

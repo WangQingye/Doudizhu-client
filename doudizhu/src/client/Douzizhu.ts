@@ -173,6 +173,7 @@ class Doudizhu extends eui.Component
         let seat = content.curPlayerIndex;
         let nowScore = content.nowScore;
         let dizhu = content.dizhu;
+        this.dizhu = dizhu;
         let dizhuCards = content.dizhuCards;
         if(dizhu) //地主已经有了
         {
@@ -223,9 +224,17 @@ class Doudizhu extends eui.Component
         console.log('onRecivePlayGame', content);
     }
 
+    private dizhu_label:eui.Label;
+    private score_panel:eui.Group;
     private onGameOver(content):void
     {
-
+        this.score_panel.visible = true;
+        let scores = content.scores;
+        for(let index in scores)
+        {
+            this['player'+ index + '_score'].text = scores[index];
+        }
+        this.dizhu_label.y = this['player' + this.dizhu].y;
     }
 
     private rect_1:eui.Label;
@@ -242,6 +251,8 @@ class Doudizhu extends eui.Component
             this.rect_3.visible = false;
             this.btn_no.visible = false;
             this.btn_yes.visible = false;
+            this['left_poker1'].visible = false;
+            this['left_pass'].visible = false;
         }else if(index == this.mySeat)
         {
             this.rect_1.visible = false;
@@ -250,6 +261,8 @@ class Doudizhu extends eui.Component
             this.btn_no.visible = true;
             this.btn_yes.visible = true;
             this.btn_yes.enabled = false; //初始的时候不能出，选择了合适的牌才能出
+            this['my_poker1'].visible = false;
+            this['my_pass'].visible = false;
         }else if(index == this.rightSeat)
         {
             this.rect_1.visible = false;
@@ -257,6 +270,8 @@ class Doudizhu extends eui.Component
             this.rect_3.visible = true;
             this.btn_no.visible = false;
             this.btn_yes.visible = false;
+            this['right_poker1'].visible = false;
+            this['right_pass'].visible = false;
         }
     }
 
@@ -279,6 +294,7 @@ class Doudizhu extends eui.Component
                 this.dizhu_pic.y = 605;
                 this.my_cards = this.my_cards.concat(dizhuCards).sort(function(a,b){return b-a});
                 this.refreshMyCard(this.my_cards);
+                this.removeMyCard([]); //排一下位置
                 break;
             case this.leftSeat:
                 this.dizhu_pic.x = 2;
@@ -409,10 +425,12 @@ class Doudizhu extends eui.Component
         if(showPass)
         {
             this[parent+'_pass'].visible = true;
+            this[parent+'_poker1'].visible = false;
             return;
         }else
         {
             this[parent+'_pass'].visible = false;
+            this[parent+'_poker1'].visible = true;
         }
         let card;
         for(let i = 0; i < this.curCards.cards.length; i++)
